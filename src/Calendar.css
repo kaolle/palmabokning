@@ -1,0 +1,93 @@
+/* Calendar.css */
+.booking-root {
+    display: flex;
+}
+.header {
+    margin-left: 20%;
+}
+.calendar {
+    display: flex;
+    flex-wrap: wrap;
+    /*justify-content: space-between;*/
+
+    /*grid-template-columns: 50px repeat(54, 1fr);*/
+    grid-gap: 5px;
+    max-width: 1000px;
+    margin: 3% 1% auto;
+}
+.month-name {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: center;
+    color: #2f4155; /* Valfri färg för månadens namn */
+}
+.week {
+    display: grid;
+    grid-template-columns: 50px repeat(7, 1fr);
+    grid-gap: 5px;
+    display: flex;
+    /*flex-direction: row;*/
+}
+
+.year-month-week-number {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 16px;
+    font-weight: bold;
+    min-width: 160px;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.year-and-month {
+    justify-content: left;
+    min-width: 130px;
+}
+
+.week-number {
+    min-width: 20px;
+    justify-content: right;
+}
+
+.just-week-number {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 16px;
+    font-weight: bold;
+    min-width: 160px;
+    align-items: center;
+    white-space: nowrap;
+    justify-content: right;
+}
+
+.calendar-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    max-width: 68px;
+}
+
+.calendar-date:hover {
+    background-color: #f1f1f1;
+}
+
+.calendar-date.selected {
+    background-color: #8cd2988a;
+    color: #282c34;
+}
+
+.date {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.booking-info {
+    font-size: 12px;
+    color: #888;
+}
