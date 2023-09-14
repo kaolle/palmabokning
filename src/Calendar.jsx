@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {
-    addDays, addMonths, addWeeks,
+    addDays,
+    addMonths,
+    addWeeks,
     eachDayOfInterval,
     eachWeekOfInterval,
-    endOfMonth,
     endOfWeek,
-    format, getDay,
-    getISOWeek, getMonth,
-    startOfMonth,
-    startOfWeek, subWeeks,
+    format,
+    getDay,
+    getISOWeek,
+    getMonth,
+    startOfWeek,
 } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import {sv} from 'date-fns/locale';
 
 import './Calendar.css';
-import BookingSound from "./BookingSound";
-import MousePositionButton from "./MousePositionButton";
 
 const Calendar = () => {
     const title = "Palma Bokningskalender";
@@ -71,7 +71,7 @@ const Calendar = () => {
         if (selectedStartDate && selectedEndDate) {
             return date >= selectedStartDate && date <= selectedEndDate;
         } else if (selectedStartDate) {
-            return date === selectedStartDate;
+            return date.toString() === selectedStartDate.toString();
         } else {
             return false;
         }
@@ -119,7 +119,7 @@ const Calendar = () => {
                 className="just-week-number">{formattedWeek}</div>;
         }
     }
-    const bothDatesAreSelected = selectedStartDate && selectedEndDate;
+
     return (
         <div className="booing-root">
             <h2 className="header">{title}</h2>
