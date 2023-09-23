@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",                // Specifies the target ECMAScript version
+    "module": "CommonJS",              // Specifies the module system (CommonJS, ESNext, etc.)
+    "strict": true,                    // Enables strict type checking
+    "esModuleInterop": true,           // Enables compatibility with CommonJS modules
+    "jsx": "react",                    // Specifies the JSX factory (e.g., "react" for React projects)
+    "outDir": "./dist",                // Specifies the output directory for compiled files
+    "rootDir": "./src",                // Specifies the root directory of your source files
+    "sourceMap": true,                 // Generates source maps for debugging
+    "declaration": true,               // Generates declaration files (e.g., .d.ts)
+    "baseUrl": "./",                   // Base directory for resolving non-relative module names
+    "paths": {
+      "@components/*": ["src/components/*"] // Module aliases (optional)
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"], // Specifies the files to be included in compilation
+  "exclude": ["node_modules"]                  // Specifies files and directories to be excluded
+}
