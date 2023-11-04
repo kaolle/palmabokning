@@ -1,0 +1,52 @@
+.bookDialog {
+    visibility: hidden;
+    position: absolute;
+
+    /* Add styling here */
+}
+
+.bookDialog.active {
+    display: flex;
+    align-items: flex-start;
+    visibility: visible;
+    position: absolute;
+    background-color: rgba(205, 222, 207, 0.98); /* Black background color */
+    color: black; /* Text color */
+    padding-bottom: 1px; /* Add spacing around the content */
+    padding-top: 1px; /* Add spacing around the content */
+    padding-left: 50px; /* Add spacing around the content */
+    padding-right: 50px; /* Add spacing around the content */
+    border-radius: 5px; /* Add rounded corners */
+    z-index: 1; /* Ensure the bookDialog appears above other content */
+    border: 2px black;
+}
+
+.buttonRow {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+}
+.label {
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff; /* Primary button color, change as needed */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10%;
+
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker color on hover, change as needed */
+}
+
+.button:focus {
+    outline: none; /* Remove focus outline if desired */
+}

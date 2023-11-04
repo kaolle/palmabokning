@@ -7,6 +7,13 @@ type TooltipProps = {
 };
 
 function getDatePart(date: Date) {
+    /* TODO replace with
+        date: Date = new Date(datePar);
+    // Get the date components
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
+    const day = date.getDate().toString().padStart(2, '0');
+     */
     return date.toString().split('T')[0];
 }
 
@@ -16,7 +23,7 @@ const Tooltip: React.FC<TooltipProps> = ({ booking,style }) => {
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
 
-        // Delay showing the tooltip for 300 milliseconds (adjust as needed)
+        // Delay showing the tooltip for 500 milliseconds (adjust as needed)
         timeoutId = setTimeout(() => {
             setIsActive(true);
         }, 500);

@@ -18,36 +18,70 @@ import {sv} from 'date-fns/locale';
 import './Calendar.css';
 import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
+import BookDialog from "./BookDialog";
+import axios from "axios";
 
+// TODO have different build one for localdev and one for production
+const apiUrl = 'http://localhost:8080/booking'; // Replace with your actual API URL
+
+// TODO replace with id from login
+const MY_MEMBER_ID = '34ea9416-74c7-11ee-b962-0242ac120002';
+
+function getOptionalDate(theDate: Date | null) {
+    return theDate !== null ? theDate : new Date();
+}
 
 const Calendar = () => {
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
+    const [yourBookings, setYourBookings] = useState<Booking[]>([]);
+    const [existingBooking, setExistingBooking] = useState<Booking|null>(null);
     const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
     const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
     const [loading, setLoading] = useState<Boolean>(true);
     const [error, setError] = useState<any | null>(null);
     const [hoveredBooking, setHoveredBooking] = useState<Booking | null>(null);
-    const [tooltipPosition, setTooltipPosition] = useState({top: 0, left: 0});
+    const [tooltipPosition, setTooltipPosition] = useState<PopupPosition>({top: 0, left: 0});
+    const [tooltipPositioning, setTooltipPositioning] = useState<PopupPositioning>({width: 150, height: 150, windowPadding: 70});
+    const [showBookDialog, setShowBookDialog] = useState<Boolean>(false);
+    const [bookDialogPosition, setBookDialogPosition] = useState<PopupPosition>({top: 0, left: 0});
+    const [bookDialogPositioning, setBookDialogPositioning] = useState<PopupPositioning>({width: 300, height: 70, windowPadding: 70});
 
 
     const today = new Date();
 
     const startWeek = startOfWeek(addWeeks(today, 1)); // Startdatum för den vecka som som går att boka är pågående vecka
-    const endWeek = endOfWeek(addMonths(today, 2)); // Slutdatum för den vecka som som går att boka är 10 månader framåt
+    const endWeek = endOfWeek(addMonths(today, 12)); // Slutdatum för den vecka som som går att boka är 10 månader framåt
     // const endWeek = endOfWeek(addMonths(today, 10)); // Slutdatum för den vecka som som går att boka är 10 månader framåt
 
     const weeks = eachWeekOfInterval({start: startWeek, end: endWeek}, {weekStartsOn: 1});
 
-    // Här filtrerar vi veckorna och dagarna i kalendern så att de inte inkluderar tidigare datum
-    const formattedStartDate = selectedStartDate ? format(selectedStartDate, 'yyyy-MM-dd') : 'NOT SET';
-    const formattedEndDate = selectedEndDate ? format(selectedEndDate, 'yyyy-MM-dd') : 'NOT SET';
 
     useEffect(() => {
         document.title = title;
     }, []);
 
-    const handleDateClick = (date: Date) => {
+    function calculatePositioning(event: any, popupPositioning: PopupPositioning) {
+        // Calculate the initial position
+        let pos : PopupPosition = {
+            left: event.clientX + (window.scrollX || window.pageXOffset),
+            top: event.clientY + (window.scrollY || window.pageYOffset)
+        };
+
+        // Adjust the tooltip position if it's too close to the window boundaries
+        const windowWidth = window.innerWidth;
+
+        const windowHeight = window.innerHeight;
+        if (pos.left + popupPositioning.width > windowWidth) {
+            pos.left = windowWidth + (window.scrollX || window.pageXOffset) - popupPositioning.width - popupPositioning.windowPadding;
+        }
+        if (pos.top + popupPositioning.height > windowHeight) {
+            pos.top = windowHeight + (window.scrollY || window.pageYOffset) - popupPositioning.height - popupPositioning.windowPadding;
+        }
+        return pos;
+    }
+
+    const handleDateClick = (date: Date,  event: any) => {
         if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
             setSelectedStartDate(date);
             setSelectedEndDate(null);
@@ -57,24 +91,20 @@ const Calendar = () => {
             setSelectedEndDate(selectedStartDate);
             setSelectedStartDate(date);
         }
-
-    };
+        setBookDialogPosition(calculatePositioning(event, bookDialogPositioning));
+    }
 
     const handleMouseEnter = (date: Date, event: any) => {
-        const filterBookings = filterFromBookings(date);
+        const filterBookings = filterFrom(bookings.concat(yourBookings), date);
         if (filterBookings.length === 1) {
             setHoveredBooking(filterBookings[0]);
-            setTooltipPosition({
-                top: event.clientY,
-                left: event.clientX,
-            });
+            setTooltipPosition(calculatePositioning(event, tooltipPositioning));
         }
-
-    };
+    }
 
     const handleMouseLeave = () => {
         setHoveredBooking(null);
-    };
+    }
 
     useEffect(() => {
         // När selectedStartDate eller selectedEndDate ändras, körs denna kod för att uppdatera state
@@ -85,12 +115,12 @@ const Calendar = () => {
                 setSelectedStartDate(selectedEndDate);
                 setSelectedEndDate(temp);
             }
+            setShowBookDialog(true);
+            console.log("selected start"+selectedStartDate+ "selected end"+ selectedEndDate);
         }
     }, [selectedStartDate, selectedEndDate]);
 
     useEffect(() => {
-        // Define the URL of your backend API
-        const apiUrl = 'http://localhost:8080/booking'; // Replace with your actual API URL
 
         // Make a GET request to fetch bookings data
         fetch(apiUrl)
@@ -122,25 +152,6 @@ const Calendar = () => {
         }
     };
 
-    const handleBooking = () => {
-        if (!selectedStartDate || !selectedEndDate) {
-            alert('Vänligen välj både ett startdatum och ett slutdatum innan du bokar.');
-            return;
-        }
-
-        // Här kan du lägga till logik för att spara bokningen i din databas eller göra andra operationer baserat på de valda datumen
-        // I det här exemplet sparar vi bara bokningarna lokalt i state
-        const selectedDates = eachDayOfInterval({start: selectedStartDate, end: selectedEndDate});
-        const newBookings = selectedDates.map((date) => ({
-            date: format(date, 'yyyy-MM-dd'),
-            bookedBy: 'Användare X',
-        }));
-
-        // setBookings([...bookings, ...newBookings]);
-        setSelectedStartDate(null);
-        setSelectedEndDate(null);
-    };
-
     let prevMonth = -1; // För att hålla koll på föregående månad (startvärdet -1 eftersom 0 är en giltig månad)
 
     const formattWeek = (date: Date) => {
@@ -166,30 +177,82 @@ const Calendar = () => {
     }
 
 
-    function filterFromBookings(date: Date) {
-        return bookings.filter((booking) => {
+    function filterFrom(pBookings: Booking[], date: Date) {
+        return pBookings.filter((booking) => {
             return compareDateParts(date, new Date(booking.from)) >= 0 && compareDateParts(date, new Date(booking.to)) <= 0;
         });
     }
 
     function isBooked(date: Date) {
-        return filterFromBookings(date).length === 1;
+        return filterFrom(bookings, date).length === 1;
+    }
+    function isYourBooking(date: Date) {
+        return filterFrom(yourBookings, date).length === 1;
     }
 
-    function getCellSubClass(date: Date) {
-        return isSelectedDate(date) ? 'selected' : isBooked(date) ? 'booked' : '';
+    function  getCellSubClass(date: Date) {
+        return isSelectedDate(date) ? 'selected' : isYourBooking(date) ? 'your-booking' : isBooked(date) ? 'booked' : '';
     }
 
     // render sections
     if (loading) {
-        return <div>Hämtar befintliga  bokningar...</div>;
+        return <div>Hämtar befintliga bokningar...</div>;
     }
 
     if (error) {
         return <div>Fel: {error.message}</div>;
     }
 
-   // console.log(`hovered booking in main: ${JSON.stringify(hoveredBooking)}`);
+    //TODO move to separate service, check SSW app
+    async function postBookingRequest(from:Date, to:Date) {
+        from.setHours(6); // adjust so we store correct date
+        to.setHours(6);
+        try {
+            let requestBody: BookingRequest;
+            requestBody = {
+                from,
+                to,
+                memberId: MY_MEMBER_ID,
+            };
+            await axios.post(apiUrl, requestBody);
+            // Continue with other synchronous operations
+        } catch (error) {
+            throw error;
+            // Handle errors or throw an exception
+        }
+    }
+
+    function onBookClick() {
+        postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate))
+            .then(() => {
+                const newBooking: Booking =  {
+                    familyMember:
+                        {name: "dig nu",
+                         uuid: MY_MEMBER_ID},
+                    from: getOptionalDate(selectedStartDate),
+                    to: getOptionalDate(selectedEndDate),
+                };
+                setYourBookings([...yourBookings, newBooking]);
+                setSelectedStartDate(null);
+                setSelectedEndDate(null);
+                setShowBookDialog(false);
+            })
+            .catch((err) => {
+                if (err.from !== undefined) {
+                    setExistingBooking(err);
+                }
+                console.error('Request failed:', err);
+            });
+        setSelectedStartDate(null);
+        setSelectedEndDate(null);
+        setShowBookDialog(false);
+    }
+
+    function onCancelBookClicked() {
+        setSelectedStartDate(null);
+        setSelectedEndDate(null);
+        setShowBookDialog(false);
+    }
 
     return (
         <div className="booing-root">
@@ -203,7 +266,7 @@ const Calendar = () => {
                                     <input
                                         readOnly={true}
                                         className={`calendar-date ${getCellSubClass(date)}`}
-                                        onClick={() => handleDateClick(date)}
+                                        onClick={(event ) => handleDateClick(date, event)}
                                         onMouseEnter={(event) => handleMouseEnter(date, event)}
                                         onMouseLeave={handleMouseLeave}
                                         value={format(date, 'yyyy-MM-dd')}
@@ -218,9 +281,16 @@ const Calendar = () => {
                 <div>
                     <Tooltip
                         booking={hoveredBooking}
-                        style={{top: tooltipPosition.top, left: tooltipPosition.left}}
+                        style={{width: tooltipPositioning.width, height: tooltipPositioning.height, top: tooltipPosition.top, left: tooltipPosition.left}}
                     />
                 </div>
+            )}
+            {showBookDialog && (
+                <BookDialog onBookClick={onBookClick}
+                            onCancelClick={onCancelBookClicked}
+                            existingBooking={existingBooking}
+                            style={{width: bookDialogPositioning.width, height:bookDialogPositioning.height,  top: bookDialogPosition.top, left: bookDialogPosition.left}}
+                />
             )}
         </div>
     );
