@@ -1,6 +1,6 @@
 interface Booking {
-    from: Date;
-    to: Date;
+    from: string;
+    to: string;
     familyMember: {
         uuid: string;
         name: string;

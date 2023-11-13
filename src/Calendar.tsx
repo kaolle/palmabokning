@@ -20,13 +20,18 @@ import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
 import BookDialog from "./BookDialog";
 import axios from "axios";
-
-// TODO have different build one for localdev and one for production
-const apiUrl = 'http://localhost:8080/booking'; // Replace with your actual API URL
+import config from "./config";
 
 // TODO replace with id from login
 const MY_MEMBER_ID = '34ea9416-74c7-11ee-b962-0242ac120002';
+const getApiUrl = () => {
+    // Determine the environment (development or production)
+    const environment = process.env.NODE_ENV || 'development';
 
+    // Use the appropriate URI based on the environment
+    // @ts-ignore
+    return config[environment].apiUrl;
+};
 function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
 }
@@ -123,7 +128,7 @@ const Calendar = () => {
     useEffect(() => {
 
         // Make a GET request to fetch bookings data
-        fetch(apiUrl)
+        fetch(getApiUrl()+'booking')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -214,7 +219,7 @@ const Calendar = () => {
                 to,
                 memberId: MY_MEMBER_ID,
             };
-            await axios.post(apiUrl, requestBody);
+            await axios.post(getApiUrl()+'booking', requestBody);
             // Continue with other synchronous operations
         } catch (error) {
             throw error;
@@ -229,8 +234,8 @@ const Calendar = () => {
                     familyMember:
                         {name: "dig nu",
                          uuid: MY_MEMBER_ID},
-                    from: getOptionalDate(selectedStartDate),
-                    to: getOptionalDate(selectedEndDate),
+                    from: getOptionalDate(selectedStartDate).toISOString(),
+                    to: getOptionalDate(selectedEndDate).toISOString(),
                 };
                 setYourBookings([...yourBookings, newBooking]);
                 setSelectedStartDate(null);
@@ -289,7 +294,7 @@ const Calendar = () => {
                 <BookDialog onBookClick={onBookClick}
                             onCancelClick={onCancelBookClicked}
                             existingBooking={existingBooking}
-                            style={{width: bookDialogPositioning.width, height:bookDialogPositioning.height,  top: bookDialogPosition.top, left: bookDialogPosition.left}}
+                            style={{width: bookDialogPositioning.width, height:bookDialogPositioning.height,  padding: bookDialogPositioning.windowPadding, top: bookDialogPosition.top, left: bookDialogPosition.left}}
                 />
             )}
         </div>

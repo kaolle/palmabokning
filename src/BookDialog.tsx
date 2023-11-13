@@ -7,8 +7,9 @@ type BookDialogProps = {
     existingBooking: Booking|null;
     style?: CSSProperties; // Define the style prop
 };
-function getDatePart(date: Date) {
+function getDatePart(dateString: string) {
     // Get the date components
+    const date = new Date(dateString);
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
     const day = date.getDate().toString().padStart(2, '0');

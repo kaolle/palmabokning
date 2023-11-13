@@ -6,15 +6,15 @@ type TooltipProps = {
     style?: CSSProperties; // Define the style prop
 };
 
-function getDatePart(date: Date) {
-    /* TODO replace with
-        date: Date = new Date(datePar);
+function getDatePart(dateString: string) {
+
+    const date: Date = new Date(dateString);
     // Get the date components
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
     const day = date.getDate().toString().padStart(2, '0');
-     */
-    return date.toString().split('T')[0];
+
+    return `${year}-${month}-${day}`;
 }
 
 const Tooltip: React.FC<TooltipProps> = ({ booking,style }) => {
