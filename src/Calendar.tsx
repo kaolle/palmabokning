@@ -26,7 +26,9 @@ import config from "./config";
 const MY_MEMBER_ID = '34ea9416-74c7-11ee-b962-0242ac120002';
 const getApiUrl = () => {
     // Determine the environment (development or production)
+    console.log("process.env.NODE_ENV: "+ process.env.NODE_ENV);
     const environment = process.env.NODE_ENV || 'development';
+    console.log(environment);
 
     // Use the appropriate URI based on the environment
     // @ts-ignore
