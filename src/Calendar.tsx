@@ -49,10 +49,10 @@ const Calendar = () => {
     const [error, setError] = useState<any | null>(null);
     const [hoveredBooking, setHoveredBooking] = useState<Booking | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<PopupPosition>({top: 0, left: 0});
-    const [tooltipPositioning, setTooltipPositioning] = useState<PopupPositioning>({width: 150, height: 150, windowPadding: 70});
+    const tooltipPositioning: PopupPositioning = {width: 150, height: 150, windowPadding: 70};
     const [showBookDialog, setShowBookDialog] = useState<Boolean>(false);
     const [bookDialogPosition, setBookDialogPosition] = useState<PopupPosition>({top: 0, left: 0});
-    const [bookDialogPositioning, setBookDialogPositioning] = useState<PopupPositioning>({width: 300, height: 70, windowPadding: 70});
+    const bookDialogPositioning: PopupPositioning = {width: 300, height: 70, windowPadding: 70};
 
 
     const today = new Date();
