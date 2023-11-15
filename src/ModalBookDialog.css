@@ -31,7 +31,7 @@
 .button-row {
     display: flex;
     bottom: 20px;
-    right: 20px;
+    right: 30px;
     margin-top: 20px;
 }
 
@@ -47,7 +47,6 @@
     &.__default {
         background-color: #007bff;
         color: white;
-        margin-left: 60%;
         margin-right: 5%;
     }
 
