@@ -170,11 +170,14 @@ const Calendar = () => {
         return isoWeek < 10 ? `V0${isoWeek}` : `V${isoWeek.toString()}`;
     };
 
-    function getMonthAndWeek(weekStart: Date) {
-        const weekDay = getDay(weekStart);
+    function getMonthAndWeek(weekStart: Date, isMobile:boolean) {
         // Format the ISO week number with leading zero
         const formattedWeek = formattWeek(weekStart);
-
+        if (isMobile) {
+            return <div
+                className="just-week-number">{formattedWeek}</div>;
+        }
+        const weekDay = getDay(weekStart);
         if (weekDay === 1 && getMonth(weekStart) !== prevMonth) {
             prevMonth = getMonth(weekStart);
             return <div className="year-month-week-number">
@@ -271,7 +274,7 @@ const Calendar = () => {
             <div className="calendar">
                 {weeks.map((weekStart) => (
                     <div key={weekStart.toISOString()} className="week">
-                        {getMonthAndWeek(weekStart)}
+                        {getMonthAndWeek(weekStart, isMobile)}
                         {eachDayOfInterval({start: weekStart, end: addDays(weekStart, 6)}).map((date) => {
                             return (<div key={date.toISOString()}>
                                     <input
