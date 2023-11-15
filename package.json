@@ -11,7 +11,7 @@
     "serve": "^14.2.1"
   },
   "scripts": {
-    "prod-start": "serve -s -p $PORT build",
+    "prod-start": "serve -l $PORT -d build",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
