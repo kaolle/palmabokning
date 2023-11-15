@@ -1,0 +1,66 @@
+.bookDialog {
+    visibility: hidden;
+    position: absolute;
+
+    /* Add styling here */
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 50%;
+    max-height: 50%;
+    overflow: auto; /* Add scrollbars if content overflows */
+    text-align: center;
+}
+
+.button-row {
+    display: flex;
+    bottom: 20px;
+    right: 20px;
+    margin-top: 20px;
+}
+
+.modal-button {
+    background-color: #4caf50; /* Primary button color, change as needed */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    /* Style for the default button */
+    &.__default {
+        background-color: #007bff;
+        color: white;
+        margin-left: 60%;
+        margin-right: 5%;
+    }
+
+    /* Style for the secondary button */
+    &.__secondary {
+        background-color: #4caf50;
+        color: white;
+    }
+}
+
+.label {
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+

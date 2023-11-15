@@ -21,14 +21,14 @@ import {compareDateParts} from "./dateUtils";
 import BookDialog from "./BookDialog";
 import axios from "axios";
 import config from "./config";
+import ModalBookDialog from "./ModalBookDialog";
+import { useMediaQuery } from 'react-responsive';
 
 // TODO replace with id from login
 const MY_MEMBER_ID = '34ea9416-74c7-11ee-b962-0242ac120002';
 const getApiUrl = () => {
     // Determine the environment (development or production)
-    console.log("process.env.NODE_ENV: "+ process.env.NODE_ENV);
     const environment = process.env.NODE_ENV || 'development';
-    console.log(environment);
 
     // Use the appropriate URI based on the environment
     // @ts-ignore
@@ -39,6 +39,10 @@ function getOptionalDate(theDate: Date | null) {
 }
 
 const Calendar = () => {
+
+    const isMobile = useMediaQuery({ maxWidth: 480 });
+    const isTablet = useMediaQuery({ minWidth: 481, maxWidth: 768 });
+
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [yourBookings, setYourBookings] = useState<Booking[]>([]);
@@ -292,13 +296,14 @@ const Calendar = () => {
                     />
                 </div>
             )}
-            {showBookDialog && (
+            {showBookDialog && !isMobile && !isTablet && (
                 <BookDialog onBookClick={onBookClick}
                             onCancelClick={onCancelBookClicked}
                             existingBooking={existingBooking}
                             style={{width: bookDialogPositioning.width, height:bookDialogPositioning.height,  padding: bookDialogPositioning.windowPadding, top: bookDialogPosition.top, left: bookDialogPosition.left}}
                 />
             )}
+            <ModalBookDialog isOpen={showBookDialog && (isMobile || isTablet)} onBookClick={onBookClick} onCancelClick={onCancelBookClicked} />
         </div>
     );
 };
