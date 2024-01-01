@@ -19,27 +19,19 @@ import './Calendar.css';
 import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
 import BookDialog from "./BookDialog";
-import axios from "axios";
-import config from "./config";
 import ModalBookDialog from "./ModalBookDialog";
 import { useMediaQuery } from 'react-responsive';
+import {getBookingsRequest, postBookingRequest} from "./rest/booking";
+import {useAuth} from "./authentication/AuthContext";
 
 // TODO replace with id from login
 const MY_MEMBER_ID = '34ea9416-74c7-11ee-b962-0242ac120002';
-const getApiUrl = () => {
-    // Determine the environment (development or production)
-    const environment = process.env.NODE_ENV || 'development';
-
-    // Use the appropriate URI based on the environment
-    // @ts-ignore
-    return config[environment].apiUrl;
-};
 function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
 }
 
 const Calendar = () => {
-
+    const { signedIn } = useAuth();
     const isMobile = useMediaQuery({ maxWidth: 480 });
     const isTablet = useMediaQuery({ minWidth: 481, maxWidth: 768 });
 
@@ -57,7 +49,6 @@ const Calendar = () => {
     const [showBookDialog, setShowBookDialog] = useState<Boolean>(false);
     const [bookDialogPosition, setBookDialogPosition] = useState<PopupPosition>({top: 0, left: 0});
     const bookDialogPositioning: PopupPositioning = {width: 300, height: 70, windowPadding: 70};
-
 
     const today = new Date();
 
@@ -132,26 +123,19 @@ const Calendar = () => {
     }, [selectedStartDate, selectedEndDate]);
 
     useEffect(() => {
-
-        // Make a GET request to fetch bookings data
-        fetch(getApiUrl()+'booking')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                // Assuming the response data is an array of bookings as described in your JSON
-                setBookings(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setError(error);
-                setLoading(false);
-                console.error('Error fetching data:', error);
-            });
-    }, []);
+        if (signedIn) {
+            getBookingsRequest()
+                .then(r => {
+                    setBookings(r.data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setError(error);
+                    setLoading(false);
+                    console.error('Error fetching data:', error);
+                });
+        }
+    }, [signedIn]);
 
     const isSelectedDate = (date: Date) => {
         if (selectedStartDate && selectedEndDate) {
@@ -208,36 +192,9 @@ const Calendar = () => {
         return isSelectedDate(date) ? 'selected' : isYourBooking(date) ? 'your-booking' : isBooked(date) ? 'booked' : '';
     }
 
-    // render sections
-    if (loading) {
-        return <div>Hämtar befintliga bokningar...</div>;
-    }
-
-    if (error) {
-        return <div>Fel: {error.message}</div>;
-    }
-
-    //TODO move to separate service, check SSW app
-    async function postBookingRequest(from:Date, to:Date) {
-        from.setHours(6); // adjust so we store correct date
-        to.setHours(6);
-        try {
-            let requestBody: BookingRequest;
-            requestBody = {
-                from,
-                to,
-                memberId: MY_MEMBER_ID,
-            };
-            await axios.post(getApiUrl()+'booking', requestBody);
-            // Continue with other synchronous operations
-        } catch (error) {
-            throw error;
-            // Handle errors or throw an exception
-        }
-    }
 
     function onBookClick() {
-        postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate))
+        postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate), MY_MEMBER_ID)
             .then(() => {
                 const newBooking: Booking =  {
                     familyMember:
@@ -266,6 +223,20 @@ const Calendar = () => {
         setSelectedStartDate(null);
         setSelectedEndDate(null);
         setShowBookDialog(false);
+    }
+
+    // render sections
+
+    if (!signedIn) {
+        return;
+    }
+
+    if (error) {
+        return <div>Fel: {error.message}</div>;
+    }
+
+    if (loading) {
+        return <div>Hämtar befintliga bokningar...</div>;
     }
 
     return (

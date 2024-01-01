@@ -1,0 +1,121 @@
+.bookDialog {
+    visibility: hidden;
+    position: absolute;
+
+    /* Add styling here */
+}
+
+.modal-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    display: flex;
+    background-color: rgba(205, 222, 207, 0.98);
+    padding: 20px;
+    box-shadow: 0px 0px 10px 0px #000; /* Box shadow for depth effect */
+    width: 50%;
+    height: 50%;
+    margin: auto; /* Center the modal content horizontally */
+    text-align: left; /* Left-align the content within the modal */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Media query for responsiveness */
+@media screen and (max-width: 600px) {
+    .modal-content {
+        width: 90%;
+        height: 90%;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 70%;
+}
+
+.header-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    text-align: left; /* Left-align the content within the modal */
+}
+
+.header-container h2 {
+    margin: 0; /* Reset the default margin of the h2 element */
+}
+
+.error-panel {
+    background-color: #ffcccc;
+    color: #990000;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    transition: opacity 0.6s ease; /* Add transition property for smooth fade-out */
+}
+
+.error-panel.hidden {
+    opacity: 0;
+    pointer-events: none; /* Disable pointer events when hidden to prevent interaction */
+}
+
+.error-text {
+}
+
+label {
+    /*display: block;*/
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button-row {
+    display: flex;
+    bottom: 20px;
+    right: 30px;
+    margin-top: 20px;
+}
+
+.modal-button {
+    background-color: #4caf50; /* Primary button color, change as needed */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    /* Style for the default button */
+    &.__default {
+        background-color: #007bff;
+        color: white;
+        margin-right: 5%;
+    }
+
+    /* Style for the secondary button */
+    &.__secondary {
+        background-color: #4caf50;
+        color: white;
+    }
+}
+
+
+
