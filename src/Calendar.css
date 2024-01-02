@@ -61,6 +61,13 @@
     justify-content: right;
 }
 
+/* Media query for responsiveness */
+@media screen and (max-width: 600px) {
+    .just-week-number {
+        min-width: 36px;
+    }
+}
+
 .calendar-date {
     display: flex;
     flex-direction: column;

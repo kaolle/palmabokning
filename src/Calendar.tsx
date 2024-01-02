@@ -30,10 +30,14 @@ function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
 }
 
+function formattDate(isMobile:boolean, date: Date) {
+    return isMobile ? format(date, 'dd') : format(date, 'yyyy-MM-dd');
+}
+
 const Calendar = () => {
     const { signedIn } = useAuth();
-    const isMobile = useMediaQuery({ maxWidth: 480 });
-    const isTablet = useMediaQuery({ minWidth: 481, maxWidth: 768 });
+    const isMobile = useMediaQuery({ maxWidth: 600 });
+    const isTablet = useMediaQuery({ minWidth: 601, maxWidth: 768 });
 
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -254,7 +258,7 @@ const Calendar = () => {
                                         onClick={(event ) => handleDateClick(date, event)}
                                         onMouseEnter={(event) => handleMouseEnter(date, event)}
                                         onMouseLeave={handleMouseLeave}
-                                        value={format(date, 'yyyy-MM-dd')}
+                                        value={formattDate(isMobile,date)}
                                     />
                                 </div>
                             )
