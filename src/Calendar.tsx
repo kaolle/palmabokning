@@ -281,7 +281,12 @@ const Calendar = () => {
                             style={{width: bookDialogPositioning.width, height:bookDialogPositioning.height,  padding: bookDialogPositioning.windowPadding, top: bookDialogPosition.top, left: bookDialogPosition.left}}
                 />
             )}
-            <ModalBookDialog isOpen={showBookDialog && (isMobile || isTablet)} onBookClick={onBookClick} onCancelClick={onCancelBookClicked} />
+            <ModalBookDialog
+                isOpen={showBookDialog && (isMobile || isTablet)}
+                onBookClick={onBookClick}
+                onCancelClick={onCancelBookClicked}
+                startDate={selectedStartDate}
+                endDate={selectedEndDate}/>
         </div>
     );
 };

@@ -15,6 +15,7 @@
     max-width: 1000px;
     margin: 3% 1% auto;
 }
+
 .month-name {
     font-weight: bold;
     font-size: 16px;
@@ -79,6 +80,7 @@
     background-color: #f9f9f9;
     max-width: 92px;
     border-radius: 3px;
+    text-align: center;
 }
 
 .calendar-date:hover {
@@ -113,4 +115,10 @@
 .booking-info {
     font-size: 12px;
     color: #888;
+}
+
+@media screen and (max-width: 600px) {
+    .calendar {
+        max-width: 600px;
+    }
 }

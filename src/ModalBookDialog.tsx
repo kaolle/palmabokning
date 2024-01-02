@@ -1,12 +1,16 @@
 import React from 'react';
 import './ModalDialogCommon.css';
+import {format} from "date-fns";
+import {sv} from "date-fns/locale";
 
 type BookDialogProps = {
     isOpen: Boolean;
     onBookClick: React.MouseEventHandler<HTMLButtonElement>;
     onCancelClick: any;
+    startDate: Date | null;
+    endDate: Date | null;
 };
-const ModalBookDialog: React.FC<BookDialogProps> = ({isOpen, onBookClick, onCancelClick,  }) => {
+const ModalBookDialog: React.FC<BookDialogProps> = ({isOpen, onBookClick, onCancelClick, startDate, endDate}) => {
 
     if (!isOpen) {
         return null;
@@ -19,7 +23,10 @@ const ModalBookDialog: React.FC<BookDialogProps> = ({isOpen, onBookClick, onCanc
                 <div className="header-container">
                     <h2 className="header">Vill du boka ?</h2>
                 </div>
-                <p>Om du bokar så går det oftast  bra, men om någon precis hann före dig, kan du trycka på F5/(på mobil dra fönstret
+                {startDate && endDate &&
+                    (<div className="high-lighted-panel">{format(startDate, 'dd MMMM', {locale: sv})} - {format(endDate, 'dd MMMM', {locale: sv})}</div>)}
+                <p>Om du bokar så går det oftast bra, men om någon precis hann före dig, kan du trycka på F5/(på mobil
+                    dra fönstret
                     neråt) och se vem de var. Ni kanske kan lösa tillsammans vem som ska ha den perioden</p>
                 {/* Two-button row */}
                 <div className="button-row">

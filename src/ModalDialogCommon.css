@@ -37,6 +37,7 @@
     .modal-content {
         width: 90%;
         height: 90%;
+        max-width: 600px;
     }
 }
 
@@ -56,6 +57,7 @@
 
 .header-container h2 {
     margin: 0; /* Reset the default margin of the h2 element */
+    text-wrap: avoid;
 }
 
 .error-panel {
@@ -117,5 +119,18 @@ input {
     }
 }
 
+.high-lighted-panel {
+    font-weight: bold;
+    padding: 20px;
+    border: 1px solid #ddd; /* Border color */
+    border-radius: 8px; /* Border radius for rounded corners */
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle depth effect */
+    background-color: #92eba1;
+    margin: 20px; /* Adjust margin as needed */
+}
+
+.high-lighted-panel p {
+    color: #666; /* Content color */
+}
 
 
