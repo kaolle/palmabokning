@@ -20,7 +20,7 @@ import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
 import BookDialog from "./BookDialog";
 import ModalBookDialog from "./ModalBookDialog";
-import { useMediaQuery } from 'react-responsive';
+import {useMediaQuery} from 'react-responsive';
 import {getBookingsRequest, postBookingRequest} from "./rest/booking";
 import {useAuth} from "./authentication/AuthContext";
 
@@ -53,6 +53,7 @@ const Calendar = () => {
     const [showBookDialog, setShowBookDialog] = useState<Boolean>(false);
     const [bookDialogPosition, setBookDialogPosition] = useState<PopupPosition>({top: 0, left: 0});
     const bookDialogPositioning: PopupPositioning = {width: 300, height: 70, windowPadding: 70};
+    const [maxWidth, setMaxWidth] = useState<string>("80%");
 
     const today = new Date();
 
@@ -65,6 +66,9 @@ const Calendar = () => {
 
     useEffect(() => {
         document.title = title;
+        const screenWidth = window.innerWidth;
+        // Adjust this as needed
+        setMaxWidth(screenWidth < 600 ? '100%' : '80%');
     }, []);
 
     function calculatePositioning(event: any, popupPositioning: PopupPositioning) {
@@ -246,7 +250,7 @@ const Calendar = () => {
     return (
         <div className="booing-root">
             <h2 className="header">{title}</h2>
-            <div className="calendar">
+            <div className="calendar" style={{ maxWidth: maxWidth }}>
                 {weeks.map((weekStart) => (
                     <div key={weekStart.toISOString()} className="week">
                         {getMonthAndWeek(weekStart, isMobile)}
