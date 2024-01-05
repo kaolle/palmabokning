@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './../ModalDialogCommon.css';
 import {useAuth} from "./AuthContext";
+import WalkingPerson from "../WalkingPerson";
 
 enum Operations {
     LoginOp = 'login',
@@ -13,9 +14,12 @@ const LoginDialog = () => {
     const [credentials, setCredentials] = useState<Credentials>({username: '', password: '', familyPhrase: ''});
     const [selectedOperation, setSelectedOperation] = useState<Operations>(Operations.LoginOp);
     const [isPasswordValid, setPasswordValid] = useState(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const handleLogin = async () => {
         setError(false);
         try {
+            setIsLoading(true);
             if (selectedOperation === Operations.LoginOp) {
                 await login(credentials);
             } else {
@@ -28,6 +32,8 @@ const LoginDialog = () => {
         } catch (e) {
             setError(true);
             console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
         }
 
     }
@@ -44,7 +50,7 @@ const LoginDialog = () => {
         console.log("radio button changed");
     }
 
-    function validPassword(password:string) {
+    function validPassword(password: string) {
         // Minimum length of 8 characters
         const minLength = 8;
 
@@ -70,8 +76,9 @@ const LoginDialog = () => {
         // If all conditions are met, the password is valid
         return true;
     }
+
     const validatePassword = () => {
-        if (selectedOperation===Operations.CreateOp) {
+        if (selectedOperation === Operations.CreateOp) {
             setTimeout(() => {
                 setPasswordValid(validPassword(credentials.password));
             }, 300)
@@ -151,6 +158,11 @@ const LoginDialog = () => {
                         <button className="modal-button __default"
                                 onClick={handleLogin}>{selectedOperation === Operations.LoginOp ? 'Login' : 'Skapa konto'}</button>
                     </div>
+
+                    {isLoading && (<div className="button-row">
+                            <WalkingPerson action = {selectedOperation===Operations.LoginOp? 'Loggar in...' : 'Skapar ditt konto...'} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

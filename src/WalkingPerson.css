@@ -1,0 +1,13 @@
+.loading-overlay {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 999; /* Set a high z-index to ensure it's on top of other elements */
+}
