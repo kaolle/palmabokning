@@ -160,3 +160,30 @@ input {
     font-size: 1.2em; /* Adjust the font size as needed for the label text */
     white-space: nowrap; /* Prevent text from wrapping */
 }
+
+@media (max-width: 600px) {
+    .radio-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .radio-label {
+        display: flex;
+        margin-bottom: 10px; /* Adjust the margin to add space between radio buttons and labels */
+    }
+
+    .radio-label input {
+        margin-right: 4vw; /* Remove the right margin to bring the radio button closer to the label */
+        transform: scale(1); /* Reset the scale to the default size */
+    }
+
+    .radio-label span {
+        flex-grow: 1;
+        font-weight: bold;
+        font-size: 1.2em; /* Adjust the font size as needed for the label text */
+        text-align: left;
+    }
+
+}

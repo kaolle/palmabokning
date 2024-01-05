@@ -19,7 +19,11 @@ const LoginDialog = () => {
             if (selectedOperation === Operations.LoginOp) {
                 await login(credentials);
             } else {
-                await signup(credentials);
+                if (validPassword(credentials.password)) {
+                    await signup(credentials);
+                } else {
+                    setPasswordValid(false);
+                }
             }
         } catch (e) {
             setError(true);
@@ -66,13 +70,11 @@ const LoginDialog = () => {
         // If all conditions are met, the password is valid
         return true;
     }
-    const handlePasswordChange = (e:any) => {
-        const newPassword = e.target.value;
-        setCredentials({...credentials, password: newPassword})
-        if (selectedOperation===Operations.CreateOp && newPassword.length > 4) {
+    const validatePassword = () => {
+        if (selectedOperation===Operations.CreateOp) {
             setTimeout(() => {
-                setPasswordValid(validPassword(newPassword));
-            }, 500)
+                setPasswordValid(validPassword(credentials.password));
+            }, 300)
         }
     };
 
@@ -116,6 +118,7 @@ const LoginDialog = () => {
                         <input type="text" id="familyPhrase" name="familyPhrase" required
                                value={credentials.familyPhrase}
                                onFocus={handleInputFocus}
+                               onBlur={validatePassword}
                                onChange={(e) => setCredentials({...credentials, familyPhrase: e.target.value})}
                         />
                     </div>)}
@@ -135,7 +138,7 @@ const LoginDialog = () => {
                         <input type="password" id="password" name="password" required
                                value={credentials.password}
                                onFocus={handleInputFocus}
-                               onChange={handlePasswordChange}
+                               onChange={(e) => setCredentials({...credentials, password: e.target.value})}
                                style={{borderColor: isPasswordValid ? 'initial' : 'red'}}
                         />
                         {!isPasswordValid && (
