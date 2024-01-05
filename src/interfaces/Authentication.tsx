@@ -2,7 +2,7 @@ interface AuthContextProps {
     signedIn: boolean;
     setSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
     login: (credentials: Credentials) => Promise<void>;
-    signup: (userData: UserData) => Promise<void>;
+    signup: (credentials: Credentials) => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -16,11 +16,6 @@ interface User {
 interface Credentials {
     username: string;
     password: string;
+    familyPhrase: string;
 }
 
-interface UserData {
-    // Define user registration properties as needed
-    username: string;
-    email: string;
-    password: string;
-}

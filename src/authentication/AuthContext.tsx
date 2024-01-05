@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
-import {loginRequest} from "../rest/authentication";
+import {loginRequest, signupRequest} from "../rest/authentication";
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -69,8 +69,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     };
 
-    const signup = async (userData: UserData) => {
-        // TODO Implement signup logic here
+    const signup = async (credentials: Credentials) => {
+        const response = await signupRequest(credentials);
+
+        // Assuming the API response includes a JWT token and its expiration time
+        const {accessToken, tokenType} = response.data;
+        // Store the token and expiration timestamp in localStorage
+        localStorage.setItem(JWT_TOKEN, accessToken);
+        localStorage.setItem(TOKEN_TYPE, tokenType);
+
+        decodeAndSaveExpirationTime(accessToken);
+
+        setSignedIn(true);
     };
 
     const logout = async () => {

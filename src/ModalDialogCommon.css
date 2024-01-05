@@ -105,6 +105,7 @@ input {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    white-space: nowrap;
 
     /* Style for the default button */
     &.__default {
@@ -135,3 +136,27 @@ input {
 }
 
 
+.radio-container {
+    border-radius: 5px;
+    padding: 10px;
+    display: flex; /* Add this line to align items in a row */
+    width: 70%;
+    align-content: center;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    margin-right: 20px; /* Adjust the margin to add space between radio buttons */
+}
+
+.radio-label input {
+    margin-right: 8px;
+    transform: scale(1.5); /* Adjust the scale factor as needed for the radio button size */
+}
+
+.radio-label span {
+    font-weight: bold;
+    font-size: 1.2em; /* Adjust the font size as needed for the label text */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
