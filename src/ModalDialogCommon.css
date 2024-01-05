@@ -180,7 +180,6 @@ input {
     }
 
     .radio-label span {
-        flex-grow: 1;
         font-weight: bold;
         font-size: 1.2em; /* Adjust the font size as needed for the label text */
         text-align: left;
