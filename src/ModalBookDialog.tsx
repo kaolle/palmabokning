@@ -24,10 +24,12 @@ const ModalBookDialog: React.FC<BookDialogProps> = ({isOpen, onBookClick, onCanc
                     <h2 className="header">Vill du boka ?</h2>
                 </div>
                 {startDate && endDate &&
-                    (<div className="high-lighted-panel">{format(startDate, 'dd MMMM', {locale: sv})} - {format(endDate, 'dd MMMM', {locale: sv})}</div>)}
-                <p>Om du bokar så går det oftast bra, men om någon precis hann före dig, kan du trycka på F5/(på mobil
-                    dra fönstret
-                    neråt) och se vem de var. Ni kanske kan lösa tillsammans vem som ska ha den perioden</p>
+                    (<div className="high-lighted-panel">{format(startDate, 'dd MMMM', {locale: sv})} - {format(endDate, 'dd MMMM', {locale: sv})}
+                    </div>
+                    )}
+                <p className='info-text-panel'>
+                    Om du bokar så går det oftast bra, men om någon precis hann före dig, kan du trycka på F5/(på mobil
+                    dra fönstret neråt) och se vem de var som var snabbast. Ni kanske kan lösa tillsammans vem som ska ha den perioden</p>
                 {/* Two-button row */}
                 <div className="button-row">
                     <button className="modal-button __default" onClick={onBookClick}>
