@@ -22,7 +22,7 @@ import BookDialog from "./BookDialog";
 import ModalBookDialog from "./ModalBookDialog";
 import {useMediaQuery} from 'react-responsive';
 import {getBookingsRequest, postBookingRequest} from "./rest/booking";
-import {getFamilyMemberId, useAuth} from "./authentication/AuthContext";
+import {getFamilyMemberId, isTokenStillValid, useAuth} from "./authentication/AuthContext";
 
 function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
@@ -33,7 +33,7 @@ function formattDate(isMobile:boolean, date: Date) {
 }
 
 const Calendar = () => {
-    const { signedIn } = useAuth();
+    const { signedIn, setSignedIn } = useAuth();
     const isMobile = useMediaQuery({ maxWidth: 600 });
     const isTablet = useMediaQuery({ minWidth: 601, maxWidth: 768 });
 
@@ -63,6 +63,7 @@ const Calendar = () => {
 
     useEffect(() => {
         document.title = title;
+        setSignedIn(isTokenStillValid());
         // Adjust this as needed
     }, []);
 
@@ -142,7 +143,7 @@ const Calendar = () => {
                     console.error('Error fetching data:', error);
                 });
         }
-    }, [signedIn, loading]);
+    }, [signedIn]);
 
     const isSelectedDate = (date: Date) => {
         if (selectedStartDate && selectedEndDate) {
@@ -209,6 +210,7 @@ const Calendar = () => {
                 console.error('Request failed:', err);
             })
             .finally(() => {
+                setYourBookings( [...yourBookings,  {from: getOptionalDate(selectedStartDate).toISOString(), to: getOptionalDate(selectedEndDate).toISOString(), familyMember: {uuid: familyMemberId, name: "ssss"}}])
                 setSelectedStartDate(null);
                 setSelectedEndDate(null);
                 setShowBookDialog(false);

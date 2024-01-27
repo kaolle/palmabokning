@@ -46,9 +46,7 @@ export const decodeAndSaveExpirationTime = (accessToken: string) => {
         }).join(''));
 
         const decodedToken: any = JSON.parse(jsonPayload);
-
-
-        return {jwtExpirationTimestamp: decodedToken.exp};
+        localStorage.setItem(JWT_EXPIRATION_TIMESTAMP, decodedToken.exp);
 
     } catch (error) {
         console.error('Error decoding or checking token:', error);
