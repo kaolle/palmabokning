@@ -7,10 +7,15 @@ interface Booking {
     };
 }
 
+enum BookingOperator {
+    ADD_BOOKING,
+    CHANGE_BOOKING,
+    DELETE_BOOKING
+};
+
 interface BookingRequest {
     from: Date;
     to: Date;
-    memberId: string;
 }
 
 interface PopupPositioning {

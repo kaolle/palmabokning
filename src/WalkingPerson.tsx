@@ -11,7 +11,7 @@ const WalkingPerson: React.FC<YourComponentProps> = ({ action }) => {
             <img
                 src="https://media.giphy.com/media/l41lIZZLqfJqDCvYY/giphy.gif"
                 alt="Walking Person"
-                style={{width: '92%', height: '85%'}}
+                style={{width: '90%', height: '85%'}}
             />
         </div>)
 }

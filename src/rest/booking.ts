@@ -18,7 +18,7 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
-export async function postBookingRequest(from: Date, to: Date, memberId: string) {
+export async function postBookingRequest(from: Date, to: Date) {
 
     from.setHours(6); // adjust so we store correct date
     to.setHours(6);
@@ -27,7 +27,6 @@ export async function postBookingRequest(from: Date, to: Date, memberId: string)
         requestBody = {
             from,
             to,
-            memberId,
         };
         await axiosInstance.post('booking', requestBody);
         // Continue with other synchronous operations

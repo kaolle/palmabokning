@@ -120,6 +120,7 @@
 
 @media screen and (max-width: 600px) {
     .calendar {
-        max-width: 100%;
+        margin: 5% auto; /* Adjust margin for smaller screens */
+        max-width: 95%; /* Increase width for smaller screens */
     }
 }

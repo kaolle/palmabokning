@@ -22,10 +22,8 @@ import BookDialog from "./BookDialog";
 import ModalBookDialog from "./ModalBookDialog";
 import {useMediaQuery} from 'react-responsive';
 import {getBookingsRequest, postBookingRequest} from "./rest/booking";
-import {useAuth} from "./authentication/AuthContext";
+import {getFamilyMemberId, useAuth} from "./authentication/AuthContext";
 
-// TODO replace with id from login
-const MY_MEMBER_ID = '34ea9416-74c7-11ee-b962-0242ac120002';
 function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
 }
@@ -53,7 +51,6 @@ const Calendar = () => {
     const [showBookDialog, setShowBookDialog] = useState<Boolean>(false);
     const [bookDialogPosition, setBookDialogPosition] = useState<PopupPosition>({top: 0, left: 0});
     const bookDialogPositioning: PopupPositioning = {width: 300, height: 70, windowPadding: 70};
-    const [maxWidth, setMaxWidth] = useState<string>("80%");
 
     const today = new Date();
 
@@ -62,13 +59,11 @@ const Calendar = () => {
     // const endWeek = endOfWeek(addMonths(today, 10)); // Slutdatum för den vecka som som går att boka är 10 månader framåt
 
     const weeks = eachWeekOfInterval({start: startWeek, end: endWeek}, {weekStartsOn: 1});
-
+    const familyMemberId = getFamilyMemberId();
 
     useEffect(() => {
         document.title = title;
-        const screenWidth = window.innerWidth;
         // Adjust this as needed
-        setMaxWidth(screenWidth < 600 ? '100%' : '80%');
     }, []);
 
     function calculatePositioning(event: any, popupPositioning: PopupPositioning) {
@@ -92,6 +87,9 @@ const Calendar = () => {
     }
 
     const handleDateClick = (date: Date,  event: any) => {
+        if (isBooked(date)) {
+            return;
+        }
         if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
             setSelectedStartDate(date);
             setSelectedEndDate(null);
@@ -136,6 +134,7 @@ const Calendar = () => {
                 .then(r => {
                     setBookings(r.data);
                     setLoading(false);
+                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.uuid === familyMemberId));
                 })
                 .catch((error) => {
                     setError(error);
@@ -143,7 +142,7 @@ const Calendar = () => {
                     console.error('Error fetching data:', error);
                 });
         }
-    }, [signedIn]);
+    }, [signedIn, loading]);
 
     const isSelectedDate = (date: Date) => {
         if (selectedStartDate && selectedEndDate) {
@@ -157,14 +156,14 @@ const Calendar = () => {
 
     let prevMonth = -1; // För att hålla koll på föregående månad (startvärdet -1 eftersom 0 är en giltig månad)
 
-    const formattWeek = (date: Date) => {
+    const formatWeek = (date: Date) => {
         const isoWeek = getISOWeek(date);
         return isoWeek < 10 ? `V0${isoWeek}` : `V${isoWeek.toString()}`;
     };
 
     function getMonthAndWeek(weekStart: Date, isMobile:boolean) {
         // Format the ISO week number with leading zero
-        const formattedWeek = formattWeek(weekStart);
+        const formattedWeek = formatWeek(weekStart);
         if (isMobile) {
             return <div
                 className="just-week-number">{formattedWeek}</div>;
@@ -202,29 +201,18 @@ const Calendar = () => {
 
 
     function onBookClick() {
-        postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate), MY_MEMBER_ID)
-            .then(() => {
-                const newBooking: Booking =  {
-                    familyMember:
-                        {name: "dig nu",
-                         uuid: MY_MEMBER_ID},
-                    from: getOptionalDate(selectedStartDate).toISOString(),
-                    to: getOptionalDate(selectedEndDate).toISOString(),
-                };
-                setYourBookings([...yourBookings, newBooking]);
-                setSelectedStartDate(null);
-                setSelectedEndDate(null);
-                setShowBookDialog(false);
-            })
+        postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate))
             .catch((err) => {
                 if (err.from !== undefined) {
                     setExistingBooking(err);
                 }
                 console.error('Request failed:', err);
+            })
+            .finally(() => {
+                setSelectedStartDate(null);
+                setSelectedEndDate(null);
+                setShowBookDialog(false);
             });
-        setSelectedStartDate(null);
-        setSelectedEndDate(null);
-        setShowBookDialog(false);
     }
 
     function onCancelBookClicked() {
@@ -250,7 +238,7 @@ const Calendar = () => {
     return (
         <div className="booing-root">
             <h2 className="header">{title}</h2>
-            <div className="calendar" style={{ maxWidth: maxWidth }}>
+            <div className="calendar" >
                 {weeks.map((weekStart) => (
                     <div key={weekStart.toISOString()} className="week">
                         {getMonthAndWeek(weekStart, isMobile)}
