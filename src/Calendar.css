@@ -12,7 +12,7 @@
 
     /*grid-template-columns: 50px repeat(54, 1fr);*/
     grid-gap: 5px;
-    max-width: 1000px;
+    max-width: 900px;
     margin: 3% 1% auto;
     overflow: hidden; /* Prevent horizontal scroll */
 }
@@ -26,7 +26,6 @@
 }
 .week {
     display: grid;
-    grid-template-columns: 50px repeat(7, 1fr);
     grid-gap: 5px;
     display: flex;
     /*flex-direction: row;*/
@@ -66,8 +65,13 @@
 /* Media query for responsiveness */
 @media screen and (max-width: 600px) {
     .just-week-number {
-        min-width: 36px;
+        min-width: 12%;
     }
+    .week {
+        grid-gap: 1%;
+        display: flex;
+    }
+
 }
 
 .calendar-date {
