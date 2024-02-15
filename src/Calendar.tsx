@@ -18,11 +18,11 @@ import {sv} from 'date-fns/locale';
 import './Calendar.css';
 import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
-import BookDialog from "./BookDialog";
-import ModalBookDialog from "./ModalBookDialog";
 import {useMediaQuery} from 'react-responsive';
 import {getBookingsRequest, postBookingRequest} from "./rest/booking";
 import {getFamilyMemberId, isTokenStillValid, useAuth} from "./authentication/AuthContext";
+import BookingFooter from "./BookingFooter";
+import BookingHeader from "./BookingHeader";
 
 function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
@@ -239,7 +239,9 @@ const Calendar = () => {
 
     return (
         <div className="booing-root">
-            <h2 className="header">{title}</h2>
+            <header>
+                <BookingHeader title={title}/>
+            </header>
             <div className="calendar" >
                 {weeks.map((weekStart) => (
                     <div key={weekStart.toISOString()} className="week">
@@ -268,19 +270,9 @@ const Calendar = () => {
                     />
                 </div>
             )}
-            {showBookDialog && !isMobile && !isTablet && (
-                <BookDialog onBookClick={onBookClick}
-                            onCancelClick={onCancelBookClicked}
-                            existingBooking={existingBooking}
-                            style={{width: bookDialogPositioning.width, height:bookDialogPositioning.height,  padding: bookDialogPositioning.windowPadding, top: bookDialogPosition.top, left: bookDialogPosition.left}}
-                />
-            )}
-            <ModalBookDialog
-                isOpen={showBookDialog && (isMobile || isTablet)}
-                onBookClick={onBookClick}
-                onCancelClick={onCancelBookClicked}
-                startDate={selectedStartDate}
-                endDate={selectedEndDate}/>
+            <footer>
+                <BookingFooter onBookClick={onBookClick}  startDate={selectedStartDate} endDate={selectedEndDate}/>
+            </footer>
         </div>
     );
 };

@@ -163,7 +163,7 @@ input {
     font-weight: bold;
     font-size: 1.2em; /* Adjust the font size as needed for the label text */
     white-space: nowrap; /* Prevent text from wrapping */
-    margin-left: 2%;
+    margin-left: 1vw;
 }
 
 @media (max-width: 600px) {

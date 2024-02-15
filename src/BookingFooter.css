@@ -1,0 +1,45 @@
+.footer-panel {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff; /* Primary button color, change as needed */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 1%;
+    margin-left: 5%;
+}
+
+.footer-date-panel {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 3%;
+    text-wrap: avoid;
+    min-width: auto;
+    border: 0px solid #ddd; /* Border color */
+    margin-left: 5%;
+
+    background-color: #f0f0f0;
+    border-radius: 5%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Adjust the values for the desired diffusion effect */
+}
+
+
+.button:disabled {
+    border: 1px solid #ddd; /* Border color */
+    background-color: #b7b6b6; /* Gray out the background */
+    color: white; /* Change text color */
+    cursor: not-allowed; /* Change cursor to indicate button is not clickable */
+}
+
+.button:focus {
+    outline: none; /* Remove focus outline if desired */
+}

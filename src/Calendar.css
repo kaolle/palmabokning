@@ -1,10 +1,18 @@
 /* Calendar.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 .booking-root {
     display: flex;
+    flex-direction: column;
+    min-height: 100%; /* Ensure app-container takes up at least the full height of the viewport */
 }
-.header {
-    margin-left: 20%;
-}
+
+
+
 .calendar {
     display: flex;
     flex-wrap: wrap;
@@ -13,8 +21,37 @@
     /*grid-template-columns: 50px repeat(54, 1fr);*/
     grid-gap: 5px;
     max-width: 900px;
+    height: calc(100vh - 100px); /* Set height for scrollable content (viewport height - header height) */
     margin: 3% 1% auto;
-    overflow: hidden; /* Prevent horizontal scroll */
+    flex: 1; /* Take remaining space */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds viewport */
+    padding-top: 13vw; /* Adjust for the header height */
+    padding-bottom: 17vw; /* Adjust for the footer height */
+}
+
+@media screen and (max-width: 600px) {
+    .calendar {
+        margin: 5% auto; /* Adjust margin for smaller screens */
+        max-width: 95%; /* Increase width for smaller screens */
+    }
+}
+
+footer {
+    background-color: lightgray;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 600px) {
+    .footer {
+        margin: 5% auto; /* Adjust margin for smaller screens */
+        max-width: 95%; /* Increase width for smaller screens */
+    }
 }
 
 .month-name {
@@ -122,9 +159,3 @@
     color: #888;
 }
 
-@media screen and (max-width: 600px) {
-    .calendar {
-        margin: 5% auto; /* Adjust margin for smaller screens */
-        max-width: 95%; /* Increase width for smaller screens */
-    }
-}

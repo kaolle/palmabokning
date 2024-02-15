@@ -1,0 +1,31 @@
+.header-panel {
+    display: flex;
+    align-items: center; /* Vertically center the items */
+    background-color: lightgray;
+    padding: 2%;
+    position: fixed;
+    top: -27px;
+    left: 0;
+    width: 900px;
+    box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.2);
+}
+@media screen and (max-width: 600px) {
+    .header-panel {
+        margin: 5% auto; /* Adjust margin for smaller screens */
+        max-width: 95%; /* Increase width for smaller screens */
+    }
+}
+
+.logoutButton {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff; /* Primary button color, change as needed */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 30%;
+}
+
