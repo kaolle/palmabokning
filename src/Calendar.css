@@ -1,4 +1,8 @@
 /* Calendar.css */
+:root {
+    --vh: 100%; /* delceration this variable initially to 100 % but might */
+}
+
 body, html {
     margin: 0;
     padding: 0;
@@ -8,10 +12,38 @@ body, html {
 .booking-root {
     display: flex;
     flex-direction: column;
-    min-height: 100%; /* Ensure app-container takes up at least the full height of the viewport */
+    /*min-height: 100%; !* Ensure app-container takes up at least the full height of the viewport *!*/
 }
 
+.header, .footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(to right, rgb(174, 196, 95), #659DBD); /* Gradient background */
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Box shadow for depth */
+    max-width: 900px;
+}
 
+@media (max-width: 600px) {
+    .header, .footer {
+        width: 100%;
+        float: none;
+    }
+}
+
+.header {
+    top: 0;
+    border-bottom: 3px solid #0056b3; /* Simulate bottom border for depth */
+}
+
+.footer {
+    bottom: 0;
+    border-top: 3px solid #0056b3; /* Simulate top border for depth */
+}
 
 .calendar {
     display: flex;
@@ -21,36 +53,19 @@ body, html {
     /*grid-template-columns: 50px repeat(54, 1fr);*/
     grid-gap: 5px;
     max-width: 900px;
-    height: calc(100vh - 100px); /* Set height for scrollable content (viewport height - header height) */
-    margin: 3% 1% auto;
-    flex: 1; /* Take remaining space */
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds viewport */
-    padding-top: 13vw; /* Adjust for the header height */
-    padding-bottom: 17vw; /* Adjust for the footer height */
+
+    padding-top: 100px; /* Adjust based on the header height */
+    padding-bottom: 100px; /* Adjust based on the footer height */
+    height: calc(var(--vh, 1vh) * 100 - 100px); /* Adjust 100px to total of header and footer height */
+    overflow-y: auto;
 }
 
-@media screen and (max-width: 600px) {
+@media (max-width: 600px) {
     .calendar {
-        margin: 5% auto; /* Adjust margin for smaller screens */
-        max-width: 95%; /* Increase width for smaller screens */
-    }
-}
-
-footer {
-    background-color: lightgray;
-    padding: 20px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    max-width: 900px;
-    width: 100%;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-@media screen and (max-width: 600px) {
-    .footer {
-        margin: 5% auto; /* Adjust margin for smaller screens */
-        max-width: 95%; /* Increase width for smaller screens */
+        width: 100%;
+        float: none;
+        padding-top: 100px; /* Adjust based on the header height */
+        padding-bottom: 100px; /* Adjust based on the footer height */
     }
 }
 
@@ -61,6 +76,7 @@ footer {
     text-align: center;
     color: #2f4155; /* Valfri färg för månadens namn */
 }
+
 .week {
     display: grid;
     grid-gap: 5px;
@@ -100,7 +116,7 @@ footer {
 }
 
 /* Media query for responsiveness */
-@media screen and (max-width: 600px) {
+@media (max-width: 600px) {
     .just-week-number {
         min-width: 12%;
     }

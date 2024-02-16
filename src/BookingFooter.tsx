@@ -29,7 +29,6 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, startDate, endDa
     return (
         <div className="footer-panel">
             <button disabled={!startDate || !endDate} className="button" onClick={onBookClick}>Boka</button>
-            <span></span>
             {startDate && endDate &&
                 (
                     <div

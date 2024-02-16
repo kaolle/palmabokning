@@ -1,19 +1,12 @@
 .header-panel {
     display: flex;
-    align-items: center; /* Vertically center the items */
-    background-color: lightgray;
-    padding: 2%;
-    position: fixed;
-    top: -27px;
-    left: 0;
-    width: 900px;
-    box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.2);
+    justify-content: space-between;
+    align-items: center; /* Aligns items vertically in the center */
+    padding: 0 20px; /* Adds padding to the header, you can adjust this value */
 }
-@media screen and (max-width: 600px) {
-    .header-panel {
-        margin: 5% auto; /* Adjust margin for smaller screens */
-        max-width: 95%; /* Increase width for smaller screens */
-    }
+
+.title {
+    margin-right: auto; /* Pushes everything else to the right */
 }
 
 .logoutButton {
@@ -26,6 +19,6 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 30%;
+    margin-left: auto; /* Pushes everything else to the left */
 }
 

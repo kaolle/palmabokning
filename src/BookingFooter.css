@@ -28,6 +28,8 @@
     margin-left: 5%;
 
     background-color: #f0f0f0;
+    color: black;
+
     border-radius: 5%;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Adjust the values for the desired diffusion effect */
 }

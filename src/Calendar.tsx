@@ -129,7 +129,16 @@ const Calendar = () => {
         }
     }, [selectedStartDate, selectedEndDate]);
 
+    const adjustHeight = () => {
+        // --vh is used in calendar.css
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
     useEffect(() => {
+        window.addEventListener('resize', adjustHeight);
+        adjustHeight(); // Call on initial load
+
         if (signedIn) {
             getBookingsRequest()
                 .then(r => {
@@ -239,9 +248,9 @@ const Calendar = () => {
 
     return (
         <div className="booing-root">
-            <header>
+            <div className="header" >
                 <BookingHeader title={title}/>
-            </header>
+            </div>
             <div className="calendar" >
                 {weeks.map((weekStart) => (
                     <div key={weekStart.toISOString()} className="week">
@@ -270,9 +279,9 @@ const Calendar = () => {
                     />
                 </div>
             )}
-            <footer>
+            <div className="footer">
                 <BookingFooter onBookClick={onBookClick}  startDate={selectedStartDate} endDate={selectedEndDate}/>
-            </footer>
+            </div>
         </div>
     );
 };
