@@ -19,7 +19,6 @@
 
 .modal-content {
     display: flex;
-    background-color: rgba(205, 222, 207, 0.98);
     padding: 20px;
     box-shadow: 0px 0px 10px 0px #000; /* Box shadow for depth effect */
     width: 50%;
@@ -32,6 +31,25 @@
     align-items: center;
     overflow: hidden; /* Prevent horizontal scroll */
 }
+
+
+.login-modal {
+    background: linear-gradient(to right, #659DBD, #a8e063, #56ab2f); /* Blue to lighter green to green */
+}
+
+.create-account-modal {
+    background: linear-gradient(to right, #56ab2f, #a8e063, #659DBD); /* Green to lighter green to blue */
+}
+
+.account-question-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Adjust the space between the items */
+    margin-bottom: 5vw;
+    width: 100%; /* Ensure the container takes full width */
+}
+
 
 /* Media query for responsiveness */
 @media screen and (max-width: 600px) {
@@ -139,27 +157,30 @@ input {
     color: #666; /* Content color */
 }
 
+.radio-button-group {
+    display: flex;
+    flex-direction: column;
+    margin-right: 50%;
+}
+
 .radio-container {
-    display: flex;
-    flex-direction: column; /* Stack radio buttons vertically */
-    align-items: flex-start; /* Align items to the start of the container */
-    padding: 10px;
-    width: 70%; /* Adjust width as needed */
+    display: block;
 }
 
-.radio-label {
-    display: flex;
-    /*align-items: center;*/
-    gap: 10px; /* This creates space between the radio button and label text */
-    margin-bottom: 10px;
+.radio-container input[type="radio"] {
+    display: block;
+    margin-bottom: 5px; /* Adjust as needed */
 }
 
-.radio-label input {
-    transform: scale(1.0); /* Adjust the scale factor as needed for the radio button size */
+.radio-container span {
+    vertical-align: middle; /* Align the text vertically with the radio button */
 }
 
-.radio-label span {
-    font-weight: bold;
-    font-size: 1.0em; /* Adjust the font size as needed for the label text */
-    white-space: nowrap; /* Prevent text from wrapping */
+.vertical-radio-container {
+    display: block;
+}
+
+.vertical-radio-container input[type="radio"] {
+    display: block;
+    margin-bottom: 5px; /* Adjust as needed */
 }

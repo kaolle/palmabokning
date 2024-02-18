@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './../ModalDialogCommon.css';
+import './LoginDialog.css';
 import {useAuth} from "./AuthContext";
 import WalkingPerson from "../WalkingPerson";
 
@@ -45,8 +45,8 @@ const LoginDialog = () => {
             setPasswordValid(true);
         }, 300);
     }
-    const handleRadioChange = (value: Operations) => {
-        setSelectedOperation(value);
+    const handleCreateAccount = () => {
+        setSelectedOperation(selectedOperation===Operations.LoginOp?Operations.CreateOp:Operations.LoginOp);
         console.log("radio button changed");
     }
 
@@ -92,26 +92,11 @@ const LoginDialog = () => {
     return (
         <div>
             <div className="modal-overlay">
-                <div className="modal-content">
-                    <div className="radio-container">
-                        <label className="radio-label">
-                            <input
-                                type="radio"
-                                value={Operations.LoginOp}
-                                checked={selectedOperation === Operations.LoginOp}
-                                onChange={() => handleRadioChange(Operations.LoginOp)}
-                            />
-                            <span>Login</span>
-                        </label>
-                        <label className="radio-label">
-                            <input
-                                type="radio"
-                                value={Operations.CreateOp}
-                                checked={selectedOperation === Operations.CreateOp}
-                                onChange={() => handleRadioChange(Operations.CreateOp)}
-                            />
-                            <span>Skapa Konto</span>
-                        </label>
+                <div className={`modal-content ${selectedOperation=== Operations.LoginOp ? 'login-modal' : 'create-account-modal'}`}>
+                    <div className="account-question-container">
+                        <span>Har du konto?</span>
+                        <button className="modal-button __default"
+                                onClick={handleCreateAccount}>{selectedOperation===Operations.LoginOp?'Nej':'Ja'}</button>
                     </div>
                     {error && (
                         <div className={`error-panel ${error ? '' : 'hidden'}`}>
