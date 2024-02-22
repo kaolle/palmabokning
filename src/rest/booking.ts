@@ -18,6 +18,8 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
+const BOOKING_PATH = 'booking';
+
 export async function postBookingRequest(from: Date, to: Date) {
 
     from.setHours(6); // adjust so we store correct date
@@ -28,7 +30,17 @@ export async function postBookingRequest(from: Date, to: Date) {
             from,
             to,
         };
-        await axiosInstance.post('booking', requestBody);
+        await axiosInstance.post(BOOKING_PATH, requestBody);
+        // Continue with other synchronous operations
+    } catch (error) {
+        throw error;
+        // Handle errors or throw an exception
+    }
+}
+export async function deleteBookingRequest(booking: Booking|null) {
+
+    try {
+        await axiosInstance.delete(`${BOOKING_PATH}/${booking?.id}`);
         // Continue with other synchronous operations
     } catch (error) {
         throw error;
@@ -37,5 +49,5 @@ export async function postBookingRequest(from: Date, to: Date) {
 }
 
 export async function getBookingsRequest() {
-    return await axiosInstance.get('booking');
+    return await axiosInstance.get(BOOKING_PATH);
 }

@@ -1,4 +1,5 @@
 interface Booking {
+    id: string;
     from: string;
     to: string;
     familyMember: {

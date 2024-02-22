@@ -5,11 +5,13 @@ import {sv} from "date-fns/locale";
 
 type BookDialogProps = {
     onBookClick: React.MouseEventHandler<HTMLButtonElement>;
+    onBookDeleteClick: React.MouseEventHandler<HTMLButtonElement>;
     startDate: Date | null;
     endDate: Date | null;
+    yourBooking: Booking |null;
 };
 
-const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, startDate, endDate}) => {
+const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookDeleteClick, startDate, endDate, yourBooking}) => {
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
@@ -28,14 +30,23 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, startDate, endDa
 
     return (
         <div className="footer-panel">
-            <button disabled={!startDate || !endDate} className="button" onClick={onBookClick}>Boka</button>
             {startDate && endDate &&
                 (
-                    <div
-                        className="footer-date-panel">{format(startDate, 'dd MMMM', {locale: sv})} - {format(endDate, 'dd MMMM', {locale: sv})}
+                    <div>
+                        <button className="button" onClick={onBookClick}>Boka</button>
+                        <div
+                            className="footer-date-panel">{format(startDate, 'dd MMMM', {locale: sv})} - {format(endDate, 'dd MMMM', {locale: sv})}
                         </div>
+                    </div>
                 )}
-
+            {yourBooking && (
+                <div>
+                    <button className="button" onClick={onBookDeleteClick}>Tabort din bokning</button>
+                    <div
+                        className="footer-date-panel">{format(new Date(yourBooking.from), 'dd MMMM', {locale: sv})} - {format(new Date(yourBooking.to), 'dd MMMM', {locale: sv})}
+                    </div>
+                </div>
+                )}
         </div>
     );
 };

@@ -19,7 +19,7 @@ import './Calendar.css';
 import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
 import {useMediaQuery} from 'react-responsive';
-import {getBookingsRequest, postBookingRequest} from "./rest/booking";
+import {deleteBookingRequest, getBookingsRequest, postBookingRequest} from "./rest/booking";
 import {getFamilyMemberId, isTokenStillValid, useAuth} from "./authentication/AuthContext";
 import BookingFooter from "./BookingFooter";
 import BookingHeader from "./BookingHeader";
@@ -40,17 +40,14 @@ const Calendar = () => {
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [yourBookings, setYourBookings] = useState<Booking[]>([]);
-    const [existingBooking, setExistingBooking] = useState<Booking|null>(null);
     const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
     const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+    const [hoveredYourBooking, setHoveredYourBooking] = useState<Booking|null>(null);
     const [loading, setLoading] = useState<Boolean>(true);
     const [error, setError] = useState<any | null>(null);
     const [hoveredBooking, setHoveredBooking] = useState<Booking | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<PopupPosition>({top: 0, left: 0});
     const tooltipPositioning: PopupPositioning = {width: 150, height: 150, windowPadding: 70};
-    const [showBookDialog, setShowBookDialog] = useState<Boolean>(false);
-    const [bookDialogPosition, setBookDialogPosition] = useState<PopupPosition>({top: 0, left: 0});
-    const bookDialogPositioning: PopupPositioning = {width: 300, height: 70, windowPadding: 70};
 
     const today = new Date();
 
@@ -88,6 +85,11 @@ const Calendar = () => {
     }
 
     const handleDateClick = (date: Date,  event: any) => {
+        if (isYourBooking(date)) {
+            setHoveredYourBooking(filterFrom(yourBookings, date)[0]);
+            return;
+        }
+
         if (isBooked(date)) {
             return;
         }
@@ -100,11 +102,10 @@ const Calendar = () => {
             setSelectedEndDate(selectedStartDate);
             setSelectedStartDate(date);
         }
-        setBookDialogPosition(calculatePositioning(event, bookDialogPositioning));
     }
 
     const handleMouseEnter = (date: Date, event: any) => {
-        const filterBookings = filterFrom(bookings.concat(yourBookings), date);
+        const filterBookings = filterFrom(bookings, date);
         if (filterBookings.length === 1) {
             setHoveredBooking(filterBookings[0]);
             setTooltipPosition(calculatePositioning(event, tooltipPositioning));
@@ -113,6 +114,7 @@ const Calendar = () => {
 
     const handleMouseLeave = () => {
         setHoveredBooking(null);
+        setHoveredYourBooking(null);
     }
 
     useEffect(() => {
@@ -124,7 +126,6 @@ const Calendar = () => {
                 setSelectedStartDate(selectedEndDate);
                 setSelectedEndDate(temp);
             }
-            setShowBookDialog(true);
             console.log("selected start"+selectedStartDate+ "selected end"+ selectedEndDate);
         }
     }, [selectedStartDate, selectedEndDate]);
@@ -213,23 +214,23 @@ const Calendar = () => {
     function onBookClick() {
         postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate))
             .catch((err) => {
-                if (err.from !== undefined) {
-                    setExistingBooking(err);
-                }
                 console.error('Request failed:', err);
             })
             .finally(() => {
-                setYourBookings( [...yourBookings,  {from: getOptionalDate(selectedStartDate).toISOString(), to: getOptionalDate(selectedEndDate).toISOString(), familyMember: {uuid: familyMemberId, name: "ssss"}}])
+                setYourBookings( [...yourBookings,  {id: "TBD", from: getOptionalDate(selectedStartDate).toISOString(), to: getOptionalDate(selectedEndDate).toISOString(), familyMember: {uuid: familyMemberId, name: "ssss"}}])
                 setSelectedStartDate(null);
                 setSelectedEndDate(null);
-                setShowBookDialog(false);
             });
     }
-
-    function onCancelBookClicked() {
-        setSelectedStartDate(null);
-        setSelectedEndDate(null);
-        setShowBookDialog(false);
+    function onBookDeleteClick() {
+        deleteBookingRequest(hoveredYourBooking)
+            .catch((err) => {
+                console.error('Request failed:', err);
+            })
+            .finally(() => {
+                setYourBookings(yourBookings.filter(item => item.id !== hoveredYourBooking?.id))
+                setBookings(bookings.filter(item => item.id !== hoveredYourBooking?.id))
+            });
     }
 
     // render sections
@@ -280,7 +281,7 @@ const Calendar = () => {
                 </div>
             )}
             <div className="footer">
-                <BookingFooter onBookClick={onBookClick}  startDate={selectedStartDate} endDate={selectedEndDate}/>
+                <BookingFooter onBookClick={onBookClick} onBookDeleteClick={onBookDeleteClick}  startDate={selectedStartDate} endDate={selectedEndDate} yourBooking={hoveredYourBooking}/>
             </div>
         </div>
     );

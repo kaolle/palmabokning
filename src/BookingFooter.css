@@ -1,6 +1,5 @@
 .footer-panel {
-    display: flex;
-    align-items: center; /* Vertically center the items */
+    display: contents;
 }
 
 .button {
