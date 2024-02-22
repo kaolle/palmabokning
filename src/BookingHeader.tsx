@@ -17,7 +17,7 @@ const BookHeader: React.FC<BookDialogProps> = ({title}) => {
     return (
         <div className="header-panel">
             <h2 className="title">{title}</h2>
-            <button className="logoutButton" onClick={handleLogout}>Loga ut</button>
+            <button className="logoutButton" onClick={handleLogout}>Logga ut</button>
         </div>
     );
 };
