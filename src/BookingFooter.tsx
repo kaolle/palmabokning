@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import './BookingFooter.css';
 import {format} from "date-fns";
 import {sv} from "date-fns/locale";
@@ -12,15 +12,9 @@ type BookDialogProps = {
 };
 
 const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookDeleteClick, startDate, endDate, yourBooking}) => {
-    const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
-
-        // Delay showing the tooltip for 500 milliseconds (adjust as needed)
-        timeoutId = setTimeout(() => {
-            setIsActive(true);
-        }, 1000);
 
         return () => {
             // Clear the timeout when the component unmounts

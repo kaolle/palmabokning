@@ -35,7 +35,6 @@ function formattDate(isMobile:boolean, date: Date) {
 const Calendar = () => {
     const { signedIn, setSignedIn } = useAuth();
     const isMobile = useMediaQuery({ maxWidth: 600 });
-    const isTablet = useMediaQuery({ minWidth: 601, maxWidth: 768 });
 
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -114,7 +113,6 @@ const Calendar = () => {
 
     const handleMouseLeave = () => {
         setHoveredBooking(null);
-        setHoveredYourBooking(null);
     }
 
     useEffect(() => {
@@ -230,6 +228,7 @@ const Calendar = () => {
             .finally(() => {
                 setYourBookings(yourBookings.filter(item => item.id !== hoveredYourBooking?.id))
                 setBookings(bookings.filter(item => item.id !== hoveredYourBooking?.id))
+                setHoveredYourBooking(null);
             });
     }
 
