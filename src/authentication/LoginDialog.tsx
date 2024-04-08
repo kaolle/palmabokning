@@ -7,12 +7,13 @@ enum Operations {
     LoginOp = 'login',
     CreateOp = 'enroll',
 }
+type OperationTypes = typeof Operations[keyof typeof Operations]; // recommended for performance reason otherwhice genereated code kan become "huge"
 
 const LoginDialog = () => {
     const {login, signedIn, signup} = useAuth();
     const [error, setError] = useState<boolean>(false);
     const [credentials, setCredentials] = useState<Credentials>({username: '', password: '', familyPhrase: ''});
-    const [selectedOperation, setSelectedOperation] = useState<Operations>(Operations.LoginOp);
+    const [selectedOperation, setSelectedOperation] = useState<OperationTypes>(Operations.LoginOp);
     const [isPasswordValid, setPasswordValid] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

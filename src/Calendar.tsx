@@ -61,7 +61,7 @@ const Calendar = () => {
         document.title = title;
         setSignedIn(isTokenStillValid());
         // Adjust this as needed
-    }, []);
+    } );
 
     function calculatePositioning(event: any, popupPositioning: PopupPositioning) {
         // Calculate the initial position
@@ -86,6 +86,9 @@ const Calendar = () => {
     const handleDateClick = (date: Date,  event: any) => {
         if (isYourBooking(date)) {
             setHoveredYourBooking(filterFrom(yourBookings, date)[0]);
+            setTimeout(() => {
+                setHoveredYourBooking(null);
+            }, 4000);
             return;
         }
 
@@ -108,11 +111,18 @@ const Calendar = () => {
         if (filterBookings.length === 1) {
             setHoveredBooking(filterBookings[0]);
             setTooltipPosition(calculatePositioning(event, tooltipPositioning));
+            if (isMobile) {
+                setTimeout(() => {
+                    setHoveredBooking(null);
+                    setTooltipPosition({top: 0, left: 0});
+                }, 4000);
+            }
         }
     }
 
     const handleMouseLeave = () => {
         setHoveredBooking(null);
+        setTooltipPosition({top: 0, left: 0});
     }
 
     useEffect(() => {
@@ -151,7 +161,7 @@ const Calendar = () => {
                     console.error('Error fetching data:', error);
                 });
         }
-    }, [signedIn]);
+    }, [signedIn, familyMemberId]);
 
     const isSelectedDate = (date: Date) => {
         if (selectedStartDate && selectedEndDate) {

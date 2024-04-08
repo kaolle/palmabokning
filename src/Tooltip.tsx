@@ -17,21 +17,11 @@ function getDatePart(dateString: string) {
     return `${year}-${month}-${day}`;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ booking,style }) => {
+const Tooltip: React.FC<TooltipProps> = ({booking, style}) => {
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
-
-        // Delay showing the tooltip for 500 milliseconds (adjust as needed)
-        timeoutId = setTimeout(() => {
-            setIsActive(true);
-        }, 500);
-
-        return () => {
-            // Clear the timeout when the component unmounts
-            clearTimeout(timeoutId);
-        };
+        setIsActive(true);
     }, []);
 
     return (
