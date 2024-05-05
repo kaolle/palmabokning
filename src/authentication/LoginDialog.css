@@ -44,10 +44,10 @@
 .account-question-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     gap: 10px; /* Adjust the space between the items */
     margin-bottom: 5vw;
-    width: 100%; /* Ensure the container takes full width */
+    width: 70%; /* Ensure the container takes full width */
 }
 
 
@@ -118,6 +118,8 @@ input {
     bottom: 20px;
     right: 30px;
     margin-top: 20px;
+    justify-content: left;
+    width: 70%;
 }
 
 .modal-button {
