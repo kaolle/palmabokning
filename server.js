@@ -1,4 +1,5 @@
 const express = require("express");
+var secure = require('ssl-express-www');
 // eslint-disable-next-line no-unused-vars
 // const bodyParser = require('body-parser');
 const path = require("path");
@@ -6,6 +7,8 @@ const app = express();
 const port = process.env.PORT || 4011;
 
 app.use(express.static(path.join(__dirname, "build")));
+
+app.use(secure);
 
 // This route serves the React app
 app.get('/', (req, res) => res.sendFile(path.resolve(__dirname, "build", "index.html")));
