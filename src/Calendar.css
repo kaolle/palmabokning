@@ -61,7 +61,7 @@ body, html {
     overflow-y: auto;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 815px) {
     .calendar {
         width: 100%;
         float: none;
@@ -117,17 +117,6 @@ body, html {
 }
 
 /* Media query for responsiveness */
-@media (max-width: 600px) {
-    .just-week-number {
-        min-width: 10%;
-    }
-    .week {
-        grid-gap: 1%;
-        display: flex;
-        margin-right: 3%;
-    }
-
-}
 
 .calendar-date {
     display: flex;
@@ -141,6 +130,25 @@ body, html {
     max-width: 92px;
     border-radius: 3px;
     text-align: center;
+}
+
+@media (max-width: 815px) {
+    .just-week-number {
+        flex: 1;
+        max-width: 100%;
+        min-width: 10%;
+    }
+    .week {
+        max-width: 100%;
+        grid-gap: 1%;
+        display: flex;
+        margin-right: 3%;
+    }
+
+    .calendar-date {
+        flex: 1;
+        max-width: 100%;
+    }
 }
 
 .calendar-date:hover {

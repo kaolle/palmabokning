@@ -14,7 +14,6 @@ import {
     startOfWeek,
 } from 'date-fns';
 import {sv} from 'date-fns/locale';
-
 import './Calendar.css';
 import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
@@ -28,13 +27,21 @@ function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
 }
 
-function formattDate(isMobile:boolean, date: Date) {
-    return isMobile ? format(date, 'dd') : format(date, 'yyyy-MM-dd');
+function formattDate(showJustDay:boolean, showJustMonthAndDay: boolean, date: Date) {
+    if (showJustDay)
+        return format(date, 'd-MMM', {locale: sv});
+
+    if (showJustMonthAndDay)
+        return format(date, 'd MMM', {locale: sv});
+
+    return format(date, 'yyyy-MM-dd');
 }
 
 const Calendar = () => {
     const { signedIn, setSignedIn } = useAuth();
     const isMobile = useMediaQuery({ maxWidth: 600 });
+    const isFlippedMobile = useMediaQuery({ maxWidth: 815 });
+    const isSmallFlippedMobile = useMediaQuery({ maxWidth: 769 });
 
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -180,10 +187,10 @@ const Calendar = () => {
         return isoWeek < 10 ? `V0${isoWeek}` : `V${isoWeek.toString()}`;
     };
 
-    function getMonthAndWeek(weekStart: Date, isMobile:boolean) {
+    function getMonthAndWeek(weekStart: Date, justWeek : boolean ) {
         // Format the ISO week number with leading zero
         const formattedWeek = formatWeek(weekStart);
-        if (isMobile) {
+        if ( justWeek ) {
             return <div
                 className="just-week-number">{formattedWeek}</div>;
         }
@@ -264,7 +271,7 @@ const Calendar = () => {
             <div className="calendar" >
                 {weeks.map((weekStart) => (
                     <div key={weekStart.toISOString()} className="week">
-                        {getMonthAndWeek(weekStart, isMobile)}
+                        {getMonthAndWeek(weekStart, isMobile||isFlippedMobile)}
                         {eachDayOfInterval({start: weekStart, end: addDays(weekStart, 6)}).map((date) => {
                             return (<div key={date.toISOString()}>
                                     <input
@@ -273,7 +280,7 @@ const Calendar = () => {
                                         onClick={(event ) => handleDateClick(date, event)}
                                         onMouseEnter={(event) => handleMouseEnter(date, event)}
                                         onMouseLeave={handleMouseLeave}
-                                        value={formattDate(isMobile,date)}
+                                        value={formattDate(isMobile, isSmallFlippedMobile,date)}
                                     />
                                 </div>
                             )
