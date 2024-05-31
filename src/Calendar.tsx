@@ -29,7 +29,7 @@ function getOptionalDate(theDate: Date | null) {
 
 function formattDate(showJustDay:boolean, showJustMonthAndDay: boolean, date: Date) {
     if (showJustDay)
-        return format(date, 'd-MMM', {locale: sv});
+        return format(date, 'd/M', {locale: sv});
 
     if (showJustMonthAndDay)
         return format(date, 'd MMM', {locale: sv});
