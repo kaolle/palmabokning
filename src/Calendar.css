@@ -148,6 +148,7 @@ body, html {
     .calendar-date {
         flex: 1;
         max-width: 100%;
+        padding: 8px;
     }
 }
 
