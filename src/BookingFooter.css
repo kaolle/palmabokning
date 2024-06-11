@@ -2,6 +2,12 @@
     display: contents;
 }
 
+.buttonRow {
+    display: flex;
+    align-items: center;
+    width: 100%
+}
+
 .button {
     display: inline-block;
     padding: 10px 20px;
@@ -12,8 +18,25 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin: 1%;
-    margin-left: 5%;
+    margin-left: 3vw;
+    margin-right: 16vw;
+}
+
+.abortButton {
+    display: inline-block;
+    padding: 5px 8px;
+    font-size: 5vw;
+    background-color: rgb(119, 116, 116); /* Primary button color, change as needed */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: auto;
+    margin-right: 1vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .footer-date-panel {
@@ -24,13 +47,13 @@
     text-wrap: avoid;
     min-width: auto;
     border: 0px solid #ddd; /* Border color */
-    margin-left: 5%;
 
     background-color: #f0f0f0;
     color: black;
 
     border-radius: 5%;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Adjust the values for the desired diffusion effect */
+    margin-right: 19vw;
 }
 
 

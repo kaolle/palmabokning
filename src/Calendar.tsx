@@ -237,6 +237,11 @@ const Calendar = () => {
                 setSelectedEndDate(null);
             });
     }
+    function onBookAbort() {
+        setSelectedStartDate(null);
+        setSelectedEndDate(null);
+    }
+
     function onBookDeleteClick() {
         deleteBookingRequest(hoveredYourBooking)
             .catch((err) => {
@@ -297,7 +302,7 @@ const Calendar = () => {
                 </div>
             )}
             <div className="footer">
-                <BookingFooter onBookClick={onBookClick} onBookDeleteClick={onBookDeleteClick}  startDate={selectedStartDate} endDate={selectedEndDate} yourBooking={hoveredYourBooking}/>
+                <BookingFooter onBookClick={onBookClick} onBookAbort={onBookAbort} onBookDeleteClick={onBookDeleteClick}  startDate={selectedStartDate} endDate={selectedEndDate} yourBooking={hoveredYourBooking}/>
             </div>
         </div>
     );
