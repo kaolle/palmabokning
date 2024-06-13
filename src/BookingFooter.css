@@ -11,7 +11,7 @@
 .button {
     display: inline-block;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 2.5vw;
     background-color: #007bff; /* Primary button color, change as needed */
     color: #fff; /* Text color */
     border: none;
@@ -19,29 +19,29 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-left: 3vw;
-    margin-right: 16vw;
+    margin-right: auto;
 }
 
 .abortButton {
     display: inline-block;
     padding: 5px 8px;
     font-size: 5vw;
-    background-color: rgb(119, 116, 116); /* Primary button color, change as needed */
-    color: #fff; /* Text color */
-    border: none;
-    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-left: auto;
-    margin-right: 1vw;
+    margin-right: 1.3vw;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .footer-date-panel {
     display: inline-block;
-    font-size: 16px;
+    font-size: 2.5vw;
     font-weight: normal;
     padding: 3%;
     text-wrap: avoid;
@@ -53,7 +53,10 @@
 
     border-radius: 5%;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Adjust the values for the desired diffusion effect */
-    margin-right: 19vw;
+    margin-right: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

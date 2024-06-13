@@ -13,11 +13,11 @@ type BookDialogProps = {
 };
 
 function formatDate(date: any) {
-    return format(date, 'dd/MM', {locale: sv});
+    return format(date, 'dd-MMMM', {locale: sv});
 }
 
 function formatBookedDate(date: any) {
-    return format(new Date(date), 'dd/MM', {locale: sv});
+    return format(new Date(date), 'dd-MMMM', {locale: sv});
 }
 
 const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onBookDeleteClick, startDate, endDate, yourBooking}) => {
@@ -47,7 +47,7 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
                 )
             }
             {yourBooking && (
-                <div>
+                <div className="buttonRow">
                     <button className="button" onClick={onBookDeleteClick}>Tabort din bokning</button>
                     <div
                         className="footer-date-panel">{formatBookedDate(yourBooking.from)} - {formatBookedDate(yourBooking.to)}
