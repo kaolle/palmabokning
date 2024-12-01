@@ -11,54 +11,64 @@
 .button {
     display: inline-block;
     padding: 10px 20px;
-    font-size: 2.5vw;
+    font-size: 1.9vw;
     background-color: #007bff; /* Primary button color, change as needed */
     color: #fff; /* Text color */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 3vw;
+    margin-left: 4vw;
     margin-right: auto;
 }
 
-.abortButton {
+.rightButton {
     display: inline-block;
-    padding: 5px 8px;
-    font-size: 5vw;
+    padding: 10px 20px;
+    font-size: 1.9vw;
+    background-color: #007bff; /* Primary button color, change as needed */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-left: auto;
-    margin-right: 1.3vw;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    background: transparent;
-    border: none;
-    color: inherit;
-    cursor: pointer;
+    margin-right: 4vw;
+}
+
+@media (max-width: 815px) {
+    .button {
+        font-size: 2.5vw;
+    }
+    .rightButton {
+        font-size: 2.5vw;
+    }
 }
 
 .footer-date-panel {
     display: inline-block;
-    font-size: 2.5vw;
+    font-size: 1.9vw;
     font-weight: normal;
-    padding: 3%;
+    padding: 2.5%;
     text-wrap: avoid;
     min-width: auto;
-    border: 0px solid #ddd; /* Border color */
-
-    background-color: #f0f0f0;
+    border: 0px solid #ddd;
+    background-color: #ddddddcf;
     color: black;
-
-    border-radius: 5%;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Adjust the values for the desired diffusion effect */
+    border-radius: 10%;
+    box-shadow: 0px 39px 27px rgb(66 132 107 / 20%);
     margin-right: auto;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+@media (max-width: 815px) {
+    .footer-date-panel {
+        padding: 3%;
+        font-size: 2.5vw;
+    }
+}
 
 .button:disabled {
     border: 1px solid #ddd; /* Border color */

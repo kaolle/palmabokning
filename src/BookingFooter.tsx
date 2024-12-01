@@ -41,7 +41,7 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
                             className="footer-date-panel">{formatDate(startDate)} - {formatDate(endDate)}
                         </div>
                         <div>
-                            <button className="abortButton" onClick={onBookAbort}>{'\u274C'}</button>
+                            <button className="rightButton" onClick={onBookAbort}>Tabort</button>
                         </div>
                     </div>
                 )

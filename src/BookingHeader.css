@@ -12,7 +12,7 @@
 .logoutButton {
     display: inline-block;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 1.9vw;
     background-color: #007bff; /* Primary button color, change as needed */
     color: #fff; /* Text color */
     border: none;
@@ -21,5 +21,12 @@
     transition: background-color 0.3s ease;
     white-space: nowrap;
     margin-left: auto; /* Pushes everything else to the left */
+    margin-right: 4vw;
+}
+
+@media (max-width: 815px) {
+    .logoutButton {
+        font-size: 2.5vw;
+    }
 }
 

@@ -57,6 +57,7 @@ body, html {
 
     padding-top: 100px; /* Adjust based on the header height */
     padding-bottom: 100px; /* Adjust based on the footer height */
+    padding-left: 20px;
     height: calc(var(--vh, 1vh) * 100 - 100px); /* Adjust 100px to total of header and footer height */
     overflow-y: auto;
 }
@@ -67,6 +68,7 @@ body, html {
         float: none;
         padding-top: 130px; /* Adjust based on the header height */
         padding-bottom: 65px; /* Adjust based on the footer height */
+        padding-left: 0px;
     }
 }
 
