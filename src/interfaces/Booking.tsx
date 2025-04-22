@@ -1,15 +1,22 @@
+interface FamilyMember {
+    uuid: string;
+    name: string;
+}
+
 interface Booking {
     id: string;
     from: string;
     to: string;
-    familyMember: {
-        uuid: string;
-        name: string;
-    };
+    familyMember: FamilyMember;
 }
 
 
 interface BookingRequest {
+    from: Date;
+    to: Date;
+}
+
+interface BookingForMemberRequest {
     from: Date;
     to: Date;
 }

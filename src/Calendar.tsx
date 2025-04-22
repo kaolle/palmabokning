@@ -18,7 +18,12 @@ import './Calendar.css';
 import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
 import {useMediaQuery} from 'react-responsive';
-import {deleteBookingRequest, getBookingsRequest, postBookingRequest} from "./rest/booking";
+import {
+    deleteBookingRequest,
+    getBookingsRequest,
+    postBookingForMemberRequest,
+    postBookingRequest
+} from "./rest/booking";
 import {getFamilyMemberId, isTokenStillValid, useAuth} from "./authentication/AuthContext";
 import BookingFooter from "./BookingFooter";
 import BookingHeader from "./BookingHeader";
@@ -226,13 +231,28 @@ const Calendar = () => {
     }
 
 
-    function onBookClick() {
-        postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate))
+    function onBookClick(memberIdToBookFor?: string) {
+        const bookingPromise = memberIdToBookFor
+            ? postBookingForMemberRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate), memberIdToBookFor)
+            : postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate));
+
+        bookingPromise
+            .then(() => {
+                // Fetch bookings from server again to get the updated list
+                setLoading(true);
+                return getBookingsRequest();
+            })
+            .then(r => {
+                if (r) {
+                    setBookings(r.data);
+                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.uuid === familyMemberId));
+                    setLoading(false);
+                }
+            })
             .catch((err) => {
                 console.error('Request failed:', err);
             })
             .finally(() => {
-                setYourBookings( [...yourBookings,  {id: "TBD", from: getOptionalDate(selectedStartDate).toISOString(), to: getOptionalDate(selectedEndDate).toISOString(), familyMember: {uuid: familyMemberId, name: "ssss"}}])
                 setSelectedStartDate(null);
                 setSelectedEndDate(null);
             });
@@ -244,12 +264,22 @@ const Calendar = () => {
 
     function onBookDeleteClick() {
         deleteBookingRequest(hoveredYourBooking)
+            .then(() => {
+                // Fetch bookings from server again to get the updated list
+                setLoading(true);
+                return getBookingsRequest();
+            })
+            .then(r => {
+                if (r) {
+                    setBookings(r.data);
+                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.uuid === familyMemberId));
+                    setLoading(false);
+                }
+            })
             .catch((err) => {
                 console.error('Request failed:', err);
             })
             .finally(() => {
-                setYourBookings(yourBookings.filter(item => item.id !== hoveredYourBooking?.id))
-                setBookings(bookings.filter(item => item.id !== hoveredYourBooking?.id))
                 setHoveredYourBooking(null);
             });
     }

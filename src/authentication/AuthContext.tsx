@@ -11,6 +11,7 @@ export const JWT_TOKEN = 'jwtToken';
 export const TOKEN_TYPE = 'tokenType';
 const JWT_EXPIRATION_TIMESTAMP = 'jwtExpirationTimestamp';
 const FAMILY_MEMBER_ID = 'familyMemberId';
+const USER_ROLE = 'userRole';
 
 const getJwtToken = () => {
     return localStorage.getItem(JWT_TOKEN);
@@ -19,6 +20,16 @@ const getJwtToken = () => {
 export const getFamilyMemberId = () => {
     const id = localStorage.getItem(FAMILY_MEMBER_ID);
     return id ? id : "familyMemberIsMissing";
+}
+
+export const getUserRole = () => {
+    const role = localStorage.getItem(USER_ROLE);
+    return role ? role : "";
+}
+
+export const isFamilyUberhead = () => {
+    const role = getUserRole();
+    return role.includes("ROLE_FAMILY_UBERHEAD");
 }
 
 
@@ -46,10 +57,16 @@ export const decodeAndSaveExpirationTime = (accessToken: string) => {
         }).join(''));
 
         const decodedToken: any = JSON.parse(jsonPayload);
-        localStorage.setItem(JWT_EXPIRATION_TIMESTAMP, decodedToken.exp);
+        const jwtExpirationTimestamp = decodedToken.exp;
+        localStorage.setItem(JWT_EXPIRATION_TIMESTAMP, jwtExpirationTimestamp);
 
+        // Convert timestamp to Date object for human-readable format
+        const jwtTokenExpiresAt = new Date(jwtExpirationTimestamp * 1000);
+
+        return { jwtExpirationTimestamp, jwtTokenExpiresAt };
     } catch (error) {
         console.error('Error decoding or checking token:', error);
+        return { jwtExpirationTimestamp: 0, jwtTokenExpiresAt: new Date(0) };
     }
 }
 
@@ -62,10 +79,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const login = async (credentials: Credentials) => {
         const response = await loginRequest(credentials);
 
-        // Assuming the API response includes a JWT token and its expiration time
-        const {accessToken, tokenType, id} = response.data;
+        // API response includes a JWT token, user info, and roles array
+        const {accessToken, tokenType, id, roles} = response.data;
 
-        storeAuthData(accessToken, tokenType, id);
+        storeAuthData(accessToken, tokenType, id, roles);
 
         decodeAndSaveExpirationTime(accessToken);
 
@@ -76,20 +93,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const signup = async (credentials: Credentials) => {
         const response = await signupRequest(credentials);
 
-        // Assuming the API response includes a JWT token and its expiration time
-        const {accessToken, tokenType, id} = response.data;
+        // API response includes a JWT token, user info, and roles array
+        const {accessToken, tokenType, id, roles} = response.data;
 
-        storeAuthData(accessToken, tokenType, id);
+        storeAuthData(accessToken, tokenType, id, roles);
 
         decodeAndSaveExpirationTime(accessToken);
 
         setSignedIn(true);
     };
 
-    const storeAuthData = (accessToken:string, tokenType: string, id: string) => {
+    const storeAuthData = (accessToken:string, tokenType: string, id: string, roles: string[]) => {
         localStorage.setItem(JWT_TOKEN, accessToken);
         localStorage.setItem(TOKEN_TYPE, tokenType);
         localStorage.setItem(FAMILY_MEMBER_ID, id);
+        localStorage.setItem(USER_ROLE, roles.join(','));
     }
 
     const logout = async () => {
@@ -130,4 +148,5 @@ function clearLoginState() {
     localStorage.removeItem(TOKEN_TYPE);
     localStorage.removeItem(FAMILY_MEMBER_ID);
     localStorage.removeItem(JWT_EXPIRATION_TIMESTAMP);
+    localStorage.removeItem(USER_ROLE);
 }
