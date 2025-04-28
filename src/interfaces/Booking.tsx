@@ -1,6 +1,7 @@
 interface FamilyMember {
     uuid: string;
     name: string;
+    phrase?: string;
 }
 
 interface Booking {

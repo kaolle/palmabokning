@@ -72,3 +72,27 @@ export async function getBookingsRequest() {
 export async function getFamilyMembersRequest() {
     return await axiosInstance.get(`${FAMILY_MEMBER_PATH}`);
 }
+
+export async function createFamilyMemberRequest(name: string, phrase: string) {
+    try {
+        return await axiosInstance.post(`${FAMILY_MEMBER_PATH}`, { name, phrase });
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function updateFamilyMemberRequest(uuid: string, name: string, phrase: string) {
+    try {
+        return await axiosInstance.put(`${FAMILY_MEMBER_PATH}/${uuid}`, { name, phrase });
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteFamilyMemberRequest(uuid: string) {
+    try {
+        return await axiosInstance.delete(`${FAMILY_MEMBER_PATH}/${uuid}`);
+    } catch (error) {
+        throw error;
+    }
+}

@@ -9,7 +9,14 @@
     margin-right: auto; /* Pushes everything else to the right */
 }
 
-.logoutButton {
+.header-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.logoutButton, .adminButton {
     display: inline-block;
     padding: 10px 20px;
     font-size: 1.9vw;
@@ -20,13 +27,27 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     white-space: nowrap;
-    margin-left: auto; /* Pushes everything else to the left */
-    margin-right: 4vw;
+}
+
+.adminButton {
+    background-color: #28a745; /* Green color for admin button */
+}
+
+.adminButton:hover {
+    background-color: #218838;
+}
+
+.logoutButton {
+    /* No margin needed in column layout */
 }
 
 @media (max-width: 815px) {
-    .logoutButton {
+    .logoutButton, .adminButton {
         font-size: 2.5vw;
+        padding: 8px 15px;
+    }
+
+    .header-buttons {
+        gap: 5px;
     }
 }
-
