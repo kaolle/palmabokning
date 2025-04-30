@@ -27,6 +27,7 @@ import {
 import {getFamilyMemberId, isTokenStillValid, useAuth} from "./authentication/AuthContext";
 import BookingFooter from "./BookingFooter";
 import BookingHeader from "./BookingHeader";
+import {generateColorFromName} from "./utils/colorUtils";
 
 function getOptionalDate(theDate: Date | null) {
     return theDate !== null ? theDate : new Date();
@@ -226,8 +227,23 @@ const Calendar = () => {
         return filterFrom(yourBookings, date).length === 1;
     }
 
-    function  getCellSubClass(date: Date) {
-        return isSelectedDate(date) ? 'selected' : isYourBooking(date) ? 'your-booking' : isBooked(date) ? 'booked' : '';
+
+    function getCellSubClass(date: Date) {
+        if (isSelectedDate(date)) {
+            return 'selected';
+        } else if (isYourBooking(date)) {
+            return 'your-booking';
+        } else if (isBooked(date)) {
+            // Find the booking for this date
+            const booking = filterFrom(bookings, date)[0];
+            if (booking) {
+                // Add a data attribute with the color based on family member name
+                const memberName = booking.familyMember.name;
+                return `booked member-${memberName.replace(/\s+/g, '-').toLowerCase()}`;
+            }
+            return 'booked';
+        }
+        return '';
     }
 
 
@@ -312,6 +328,9 @@ const Calendar = () => {
                                     <input
                                         readOnly={true}
                                         className={`calendar-date ${getCellSubClass(date)}`}
+                                        style={isBooked(date) && !isYourBooking(date) ?
+                                            { backgroundColor: generateColorFromName(filterFrom(bookings, date)[0].familyMember.name) } :
+                                            undefined}
                                         onClick={(event ) => handleDateClick(date, event)}
                                         onMouseEnter={(event) => handleMouseEnter(date, event)}
                                         onMouseLeave={handleMouseLeave}
