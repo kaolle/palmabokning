@@ -36,6 +36,10 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
             getFamilyMembersRequest()
                 .then(response => {
                     setFamilyMembers(response.data);
+                    // Initialize with the first family member if available
+                    if (response.data && response.data.length > 0) {
+                        setSelectedFamilyMember(response.data[0]);
+                    }
                     setLoading(false);
                 })
                 .catch(error => {
@@ -54,7 +58,7 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
         if (familyMembers.length === 0) return;
 
         const currentIndex = selectedFamilyMember
-            ? familyMembers.findIndex(member => member.uuid === selectedFamilyMember.uuid)
+            ? familyMembers.findIndex(member => member.id === selectedFamilyMember.id)
             : -1;
 
         const newIndex = currentIndex <= 0
@@ -68,7 +72,7 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
         if (familyMembers.length === 0) return;
 
         const currentIndex = selectedFamilyMember
-            ? familyMembers.findIndex(member => member.uuid === selectedFamilyMember.uuid)
+            ? familyMembers.findIndex(member => member.id === selectedFamilyMember.id)
             : -1;
 
         const newIndex = currentIndex === -1 || currentIndex === familyMembers.length - 1
@@ -80,7 +84,7 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
 
     const handleBookClick = () => {
         if (isUberhead && selectedFamilyMember) {
-            onBookClick(selectedFamilyMember.uuid);
+            onBookClick(selectedFamilyMember.id);
         } else {
             onBookClick();
         }

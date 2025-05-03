@@ -1,5 +1,5 @@
 interface FamilyMember {
-    uuid: string;
+    id: string;
     name: string;
     phrase?: string;
 }

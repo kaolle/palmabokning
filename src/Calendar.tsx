@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     addDays,
     addMonths,
@@ -48,6 +48,8 @@ const Calendar = () => {
     const isMobile = useMediaQuery({ maxWidth: 600 });
     const isFlippedMobile = useMediaQuery({ maxWidth: 815 });
     const isSmallFlippedMobile = useMediaQuery({ maxWidth: 769 });
+    const weekRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
+    const calendarRef = useRef<HTMLDivElement>(null);
 
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -60,6 +62,7 @@ const Calendar = () => {
     const [hoveredBooking, setHoveredBooking] = useState<Booking | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<PopupPosition>({top: 0, left: 0});
     const tooltipPositioning: PopupPositioning = {width: 150, height: 150, windowPadding: 70};
+    const [visibleWeekStart, setVisibleWeekStart] = useState<Date | null>(null);
 
     const today = new Date();
 
@@ -157,6 +160,65 @@ const Calendar = () => {
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
 
+    // Function to determine which week is currently visible in the viewport
+    const determineVisibleWeek = useCallback(() => {
+        if (!calendarRef.current) return null;
+
+        // Find the topmost visible week in the viewport
+        let topmostWeek = null;
+        let topmostPosition = Infinity;
+
+        Object.entries(weekRefs.current).forEach(([weekKey, weekElement]) => {
+            if (weekElement) {
+                const weekRect = weekElement.getBoundingClientRect();
+
+                // Check if the week is visible in the viewport
+                const isVisible =
+                    (weekRect.top >= 0 && weekRect.top <= window.innerHeight) || // Top edge is in viewport
+                    (weekRect.bottom >= 0 && weekRect.bottom <= window.innerHeight) || // Bottom edge is in viewport
+                    (weekRect.top < 0 && weekRect.bottom > window.innerHeight); // Week spans entire viewport
+
+                if (isVisible && weekRect.top < topmostPosition) {
+                    topmostPosition = weekRect.top;
+                    topmostWeek = new Date(weekKey);
+                }
+            }
+        });
+
+        return topmostWeek;
+    }, []);
+
+    // Function to scroll to a specific week
+    const scrollToWeek = useCallback((weekStart: Date | null) => {
+        if (!weekStart) return;
+
+        const weekKey = weekStart.toISOString();
+        const weekElement = weekRefs.current[weekKey];
+
+        if (weekElement) {
+            // Use a higher timeout to ensure DOM is fully updated
+            setTimeout(() => {
+                weekElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                console.log('Scrolled to week:', format(weekStart, 'yyyy-MM-dd'));
+            }, 100);
+        }
+    }, []);
+
+    // Track scroll position to determine visible week
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!loading) {
+                const currentVisibleWeek = determineVisibleWeek();
+                if (currentVisibleWeek) {
+                    setVisibleWeekStart(currentVisibleWeek);
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [loading, determineVisibleWeek]);
+
     useEffect(() => {
         window.addEventListener('resize', adjustHeight);
         adjustHeight(); // Call on initial load
@@ -166,7 +228,15 @@ const Calendar = () => {
                 .then(r => {
                     setBookings(r.data);
                     setLoading(false);
-                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.uuid === familyMemberId));
+                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.id === familyMemberId));
+
+                    // Initial determination of visible week after data loads
+                    setTimeout(() => {
+                        const initialVisibleWeek = determineVisibleWeek();
+                        if (initialVisibleWeek) {
+                            setVisibleWeekStart(initialVisibleWeek);
+                        }
+                    }, 100);
                 })
                 .catch((error) => {
                     setError(error);
@@ -174,7 +244,14 @@ const Calendar = () => {
                     console.error('Error fetching data:', error);
                 });
         }
-    }, [signedIn, familyMemberId]);
+    }, [signedIn, familyMemberId, determineVisibleWeek]);
+
+    // Restore visible week when loading state changes to false
+    useEffect(() => {
+        if (!loading && visibleWeekStart) {
+            scrollToWeek(visibleWeekStart);
+        }
+    }, [loading, visibleWeekStart, scrollToWeek]);
 
     const isSelectedDate = (date: Date) => {
         if (selectedStartDate && selectedEndDate) {
@@ -248,6 +325,13 @@ const Calendar = () => {
 
 
     function onBookClick(memberIdToBookFor?: string) {
+        // Save current visible week before making the booking
+        const currentVisibleWeek = determineVisibleWeek();
+        if (currentVisibleWeek) {
+            setVisibleWeekStart(currentVisibleWeek);
+            console.log('Saved visible week before booking:', format(currentVisibleWeek, 'yyyy-MM-dd'));
+        }
+
         const bookingPromise = memberIdToBookFor
             ? postBookingForMemberRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate), memberIdToBookFor)
             : postBookingRequest(getOptionalDate(selectedStartDate), getOptionalDate(selectedEndDate));
@@ -261,8 +345,11 @@ const Calendar = () => {
             .then(r => {
                 if (r) {
                     setBookings(r.data);
-                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.uuid === familyMemberId));
+                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.id === familyMemberId));
                     setLoading(false);
+
+                    // The useEffect hook will handle scrolling to the saved week
+                    // when loading changes to false
                 }
             })
             .catch((err) => {
@@ -279,6 +366,13 @@ const Calendar = () => {
     }
 
     function onBookDeleteClick() {
+        // Save current visible week before deleting the booking
+        const currentVisibleWeek = determineVisibleWeek();
+        if (currentVisibleWeek) {
+            setVisibleWeekStart(currentVisibleWeek);
+            console.log('Saved visible week before deletion:', format(currentVisibleWeek, 'yyyy-MM-dd'));
+        }
+
         deleteBookingRequest(hoveredYourBooking)
             .then(() => {
                 // Fetch bookings from server again to get the updated list
@@ -288,8 +382,11 @@ const Calendar = () => {
             .then(r => {
                 if (r) {
                     setBookings(r.data);
-                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.uuid === familyMemberId));
+                    setYourBookings(r.data.filter((booking: Booking) => booking.familyMember.id === familyMemberId));
                     setLoading(false);
+
+                    // The useEffect hook will handle scrolling to the saved week
+                    // when loading changes to false
                 }
             })
             .catch((err) => {
@@ -299,6 +396,13 @@ const Calendar = () => {
                 setHoveredYourBooking(null);
             });
     }
+
+    // Function to set ref for each week element
+    const setWeekRef = useCallback((element: HTMLDivElement | null, weekStart: Date) => {
+        if (element) {
+            weekRefs.current[weekStart.toISOString()] = element;
+        }
+    }, []);
 
     // render sections
 
@@ -319,9 +423,13 @@ const Calendar = () => {
             <div className="header" >
                 <BookingHeader title={title}/>
             </div>
-            <div className="calendar" >
+            <div className="calendar" ref={calendarRef}>
                 {weeks.map((weekStart) => (
-                    <div key={weekStart.toISOString()} className="week">
+                    <div
+                        key={weekStart.toISOString()}
+                        className="week"
+                        ref={(el) => setWeekRef(el, weekStart)}
+                    >
                         {getMonthAndWeek(weekStart, isMobile||isFlippedMobile)}
                         {eachDayOfInterval({start: weekStart, end: addDays(weekStart, 6)}).map((date) => {
                             return (<div key={date.toISOString()}>

@@ -90,7 +90,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
     setError(null);
 
     try {
-      await updateFamilyMemberRequest(editingMember.uuid, editingMember.name, editingMember.phrase);
+      await updateFamilyMemberRequest(editingMember.id, editingMember.name, editingMember.phrase);
       setEditingMember(null);
       await loadFamilyMembers();
     } catch (err) {
@@ -101,7 +101,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
     }
   };
 
-  const handleDeleteMember = async (uuid: string) => {
+  const handleDeleteMember = async (id: string) => {
     if (!window.confirm('Är du säker på att du vill ta bort denna familjemedlem?')) {
       return;
     }
@@ -110,7 +110,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
     setError(null);
 
     try {
-      await deleteFamilyMemberRequest(uuid);
+      await deleteFamilyMemberRequest(id);
       await loadFamilyMembers();
     } catch (err) {
       console.error('Error deleting family member:', err);
@@ -163,8 +163,8 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
               <div className="no-members-message">Inga familjemedlemmar hittades</div>
             ) : (
               familyMembers.map((member) => (
-                <div key={member.uuid} className="family-member-item">
-                  {editingMember && editingMember.uuid === member.uuid ? (
+                <div key={member.id} className="family-member-item">
+                  {editingMember && editingMember.id === member.id ? (
                     <>
                       <div className="editing-inputs">
                         <input
@@ -193,7 +193,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
                       </div>
                       <div className="member-actions">
                         <button onClick={() => setEditingMember(member)}>Redigera</button>
-                        <button onClick={() => handleDeleteMember(member.uuid)}>Ta bort</button>
+                        <button onClick={() => handleDeleteMember(member.id)}>Ta bort</button>
                       </div>
                     </>
                   )}
