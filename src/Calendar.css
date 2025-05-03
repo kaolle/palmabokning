@@ -163,12 +163,31 @@ body, html {
     color: white;
 }
 
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
 .calendar-date.your-booking {
     color: black;
-    background: linear-gradient(135deg, rgba(174, 196, 95, 0.8), rgb(174, 196, 95));
-    border: 2px solid rgb(124, 146, 45);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(
+        to right,
+        #ffdd9e 0%,
+        #ff9d45 20%,
+        #ffb732 40%,
+        #ff7b25 60%,
+        #ff5722 80%,
+        #ffb732 100%
+    );
+    background-size: 200% 100%;
+    border: 2px solid rgba(255, 140, 0, 0.8);
+    box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.7), 0 0 15px 5px rgba(255, 69, 0, 0.5);
     font-weight: bold;
+    animation: shimmer 2s infinite linear;
     transition: transform 0.2s;
     &:hover {
         transform: translate(3%, 3%);
