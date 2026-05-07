@@ -8,6 +8,7 @@ import {
   updateFamilyMemberRequest
 } from './rest/booking';
 import {isFamilyUberhead} from './authentication/AuthContext';
+import {generateColorFromName} from './utils/colorUtils';
 
 interface FamilyMemberAdminProps {
   isOpen: boolean;
@@ -26,6 +27,17 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
     if (isOpen) {
       loadFamilyMembers();
     }
+  }, [isOpen]);
+
+  // Lock the underlying calendar's scroll while the modal is open, otherwise
+  // touches in the list bleed through and scroll the calendar (especially when
+  // the list is too short to scroll itself).
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.classList.add('modal-open');
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
   }, [isOpen]);
 
   const loadFamilyMembers = async () => {
@@ -148,6 +160,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
             disabled={loading}
           />
           <button
+            className="btn-primary btn-add"
             onClick={handleCreateMember}
             disabled={loading || !newMemberName.trim() || !newMemberPhrase.trim()}
           >
@@ -162,8 +175,15 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
             {familyMembers.length === 0 ? (
               <div className="no-members-message">Inga familjemedlemmar hittades</div>
             ) : (
-              familyMembers.map((member) => (
-                <div key={member.id} className="family-member-item">
+              familyMembers.map((member, idx) => (
+                <div
+                  key={member.id}
+                  className="family-member-item"
+                  style={{
+                    '--member-color': generateColorFromName(member.name),
+                    '--item-index': idx,
+                  } as React.CSSProperties}
+                >
                   {editingMember && editingMember.id === member.id ? (
                     <>
                       <div className="editing-inputs">
@@ -181,19 +201,24 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
                         />
                       </div>
                       <div className="member-actions">
-                        <button onClick={handleUpdateMember}>Spara</button>
-                        <button onClick={() => setEditingMember(null)}>Avbryt</button>
+                        <button className="btn-primary" onClick={handleUpdateMember}>Spara</button>
+                        <button className="btn-secondary" onClick={() => setEditingMember(null)}>Avbryt</button>
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="member-info">
-                        <span className="member-name">{member.name}</span>
-                        <span className="member-phrase">{member.phrase}</span>
+                        <span className="member-avatar" aria-hidden="true">
+                          {member.name.trim().charAt(0).toUpperCase() || '?'}
+                        </span>
+                        <div className="member-text">
+                          <span className="member-name">{member.name}</span>
+                          <span className="member-phrase">{member.phrase}</span>
+                        </div>
                       </div>
                       <div className="member-actions">
-                        <button onClick={() => setEditingMember(member)}>Redigera</button>
-                        <button onClick={() => handleDeleteMember(member.id)}>Ta bort</button>
+                        <button className="btn-secondary" onClick={() => setEditingMember(member)}>Redigera</button>
+                        <button className="btn-danger" onClick={() => handleDeleteMember(member.id)}>Ta bort</button>
                       </div>
                     </>
                   )}

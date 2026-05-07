@@ -117,7 +117,7 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
             )}
             {yourBooking && (
                 <div className="buttonRow">
-                    <button className="button" onClick={onBookDeleteClick}>Tabort din bokning</button>
+                    <button data-role="cancel-booking" className="button" onClick={onBookDeleteClick}>Tabort din bokning</button>
                     <div
                         className="footer-date-panel">{formatBookedDate(yourBooking.from)} - {formatBookedDate(yourBooking.to)}
                     </div>

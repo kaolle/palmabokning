@@ -4,6 +4,7 @@
     "module": "CommonJS",              // Specifies the module system (CommonJS, ESNext, etc.)
     "strict": true,                    // Enables strict type checking
     "esModuleInterop": true,           // Enables compatibility with CommonJS modules
+    "skipLibCheck": true,              // Don't type-check .d.ts files in node_modules
     "jsx": "react",                    // Specifies the JSX factory (e.g., "react" for React projects)
     "outDir": "./dist",                // Specifies the output directory for compiled files
     "rootDir": "./src",                // Specifies the root directory of your source files

@@ -64,7 +64,7 @@ const Calendar = () => {
     const [error, setError] = useState<any | null>(null);
     const [hoveredBooking, setHoveredBooking] = useState<Booking | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<PopupPosition>({top: 0, left: 0});
-    const [yourBookingHintPosition, setYourBookingHintPosition] = useState<{top: number; left: number; travel: number} | null>(null);
+    const [yourBookingHintPosition, setYourBookingHintPosition] = useState<{top: number; left: number; travelX: number; travelY: number} | null>(null);
     const tooltipPositioning: PopupPositioning = {width: 150, height: 150, windowPadding: 70};
     const [visibleWeekStart, setVisibleWeekStart] = useState<Date | null>(null);
 
@@ -153,13 +153,32 @@ const Calendar = () => {
             clearYourBookingTimer();
             setHoveredYourBooking(filterFrom(yourBookings, date)[0]);
 
-            // Viewport-relative anchor + travel distance to the footer, used by
-            // the CSS animation to glide the hint from the cell down to the footer.
+            // Anchor the hint to the cell, then aim its travel at the cancel
+            // ("Tabort din bokning") button so the embrace lands on the action
+            // the user needs to take. The button only mounts after we set
+            // hoveredYourBooking, so we wait one frame before measuring it.
             const cellRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-            const footerEl = document.querySelector('.footer') as HTMLElement | null;
-            const footerHeight = footerEl?.getBoundingClientRect().height ?? 80;
-            const travel = Math.max(0, window.innerHeight - cellRect.bottom - footerHeight);
-            setYourBookingHintPosition({top: cellRect.top, left: cellRect.left, travel});
+            const cellCenterX = cellRect.left + cellRect.width / 2;
+            const cellCenterY = cellRect.top + cellRect.height / 2;
+            requestAnimationFrame(() => {
+                const btn = document.querySelector('[data-role="cancel-booking"]') as HTMLElement | null;
+                let targetX: number;
+                let targetY: number;
+                if (btn) {
+                    const btnRect = btn.getBoundingClientRect();
+                    targetX = btnRect.left + btnRect.width / 2;
+                    targetY = btnRect.top + btnRect.height / 2;
+                } else {
+                    // Fallback: footer centre, in case the button isn't in the DOM yet.
+                    const footerEl = document.querySelector('.footer') as HTMLElement | null;
+                    const footerRect = footerEl?.getBoundingClientRect();
+                    targetX = window.innerWidth / 2;
+                    targetY = footerRect ? footerRect.top + footerRect.height / 2 : window.innerHeight - 40;
+                }
+                const travelX = targetX - cellCenterX;
+                const travelY = Math.max(0, targetY - cellCenterY);
+                setYourBookingHintPosition({top: cellRect.top, left: cellRect.left, travelX, travelY});
+            });
 
             // Hint runs its 4s animation, then clears. Footer's delete row stays
             // longer (7s total) so there's time to actually press "Tabort".
@@ -558,10 +577,13 @@ const Calendar = () => {
                     style={{
                         top: yourBookingHintPosition.top,
                         left: yourBookingHintPosition.left,
-                        '--travel-distance': `${yourBookingHintPosition.travel}px`,
+                        '--travel-x': `${yourBookingHintPosition.travelX}px`,
+                        '--travel-y': `${yourBookingHintPosition.travelY}px`,
                     } as React.CSSProperties}
                 >
-                    Det här är din bokning ↓
+                    <span className="hint-end hint-left">Det här</span>
+                    <span className="hint-mid">&nbsp;är din&nbsp;</span>
+                    <span className="hint-end hint-right">bokning ↓</span>
                 </div>
             )}
             <div className="footer">

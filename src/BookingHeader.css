@@ -16,7 +16,7 @@
     align-items: flex-end;
 }
 
-.logoutButton, .adminButton {
+.logoutButton, .adminButton, .checklistButton {
     display: inline-block;
     padding: 10px 20px;
     font-size: 1.9vw;
@@ -37,12 +37,20 @@
     background-color: #218838;
 }
 
+.checklistButton {
+    background-color: #e67e22; /* Warm orange so it stands out from admin/logout */
+}
+
+.checklistButton:hover {
+    background-color: #d35400;
+}
+
 .logoutButton {
     /* No margin needed in column layout */
 }
 
 @media (max-width: 815px) {
-    .logoutButton, .adminButton {
+    .logoutButton, .adminButton, .checklistButton {
         font-size: 2.5vw;
         padding: 8px 15px;
     }

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './BookingHeader.css';
 import {isFamilyUberhead, useAuth} from "./authentication/AuthContext";
 import FamilyMemberAdmin from './FamilyMemberAdmin';
+import Checklist from './Checklist';
 
 type BookDialogProps = {
     title: string;
@@ -10,6 +11,7 @@ type BookDialogProps = {
 const BookHeader: React.FC<BookDialogProps> = ({title}) => {
     const {logout, setSignedIn} = useAuth();
     const [isAdminOpen, setIsAdminOpen] = useState(false);
+    const [isChecklistOpen, setIsChecklistOpen] = useState(false);
     const isUberhead = isFamilyUberhead();
 
     const handleLogout = async () => {
@@ -29,6 +31,9 @@ const BookHeader: React.FC<BookDialogProps> = ({title}) => {
         <div className="header-panel">
             <h2 className="title">{title}</h2>
             <div className="header-buttons">
+                <button className="checklistButton" onClick={() => setIsChecklistOpen(true)}>
+                    Checklista
+                </button>
                 {isUberhead && (
                     <button className="adminButton" onClick={handleAdminClick}>
                         Admin
@@ -39,6 +44,7 @@ const BookHeader: React.FC<BookDialogProps> = ({title}) => {
             {isUberhead && (
                 <FamilyMemberAdmin isOpen={isAdminOpen} onClose={handleAdminClose} />
             )}
+            <Checklist isOpen={isChecklistOpen} onClose={() => setIsChecklistOpen(false)} />
         </div>
     );
 };
