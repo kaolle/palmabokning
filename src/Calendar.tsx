@@ -51,6 +51,8 @@ const Calendar = () => {
     const weekRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
     const calendarRef = useRef<HTMLDivElement>(null);
     const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const yourBookingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const yourBookingHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -62,6 +64,7 @@ const Calendar = () => {
     const [error, setError] = useState<any | null>(null);
     const [hoveredBooking, setHoveredBooking] = useState<Booking | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<PopupPosition>({top: 0, left: 0});
+    const [yourBookingHintPosition, setYourBookingHintPosition] = useState<{top: number; left: number; travel: number} | null>(null);
     const tooltipPositioning: PopupPositioning = {width: 150, height: 150, windowPadding: 70};
     const [visibleWeekStart, setVisibleWeekStart] = useState<Date | null>(null);
 
@@ -107,9 +110,22 @@ const Calendar = () => {
         }
     };
 
+    const clearYourBookingTimer = () => {
+        if (yourBookingTimerRef.current) {
+            clearTimeout(yourBookingTimerRef.current);
+            yourBookingTimerRef.current = null;
+        }
+        if (yourBookingHintTimerRef.current) {
+            clearTimeout(yourBookingHintTimerRef.current);
+            yourBookingHintTimerRef.current = null;
+        }
+    };
+
     useEffect(() => {
         return () => {
             if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
+            if (yourBookingTimerRef.current) clearTimeout(yourBookingTimerRef.current);
+            if (yourBookingHintTimerRef.current) clearTimeout(yourBookingHintTimerRef.current);
         };
     }, []);
 
@@ -134,10 +150,27 @@ const Calendar = () => {
 
     const handleDateClick = (date: Date,  event: any) => {
         if (isYourBooking(date)) {
+            clearYourBookingTimer();
             setHoveredYourBooking(filterFrom(yourBookings, date)[0]);
-            setTimeout(() => {
-                setHoveredYourBooking(null);
+
+            // Viewport-relative anchor + travel distance to the footer, used by
+            // the CSS animation to glide the hint from the cell down to the footer.
+            const cellRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+            const footerEl = document.querySelector('.footer') as HTMLElement | null;
+            const footerHeight = footerEl?.getBoundingClientRect().height ?? 80;
+            const travel = Math.max(0, window.innerHeight - cellRect.bottom - footerHeight);
+            setYourBookingHintPosition({top: cellRect.top, left: cellRect.left, travel});
+
+            // Hint runs its 4s animation, then clears. Footer's delete row stays
+            // longer (7s total) so there's time to actually press "Tabort".
+            yourBookingHintTimerRef.current = setTimeout(() => {
+                setYourBookingHintPosition(null);
+                yourBookingHintTimerRef.current = null;
             }, 4000);
+            yourBookingTimerRef.current = setTimeout(() => {
+                setHoveredYourBooking(null);
+                yourBookingTimerRef.current = null;
+            }, 7000);
             return;
         }
 
@@ -448,7 +481,9 @@ const Calendar = () => {
                 console.error('Request failed:', err);
             })
             .finally(() => {
+                clearYourBookingTimer();
                 setHoveredYourBooking(null);
+                setYourBookingHintPosition(null);
             });
     }
 
@@ -510,7 +545,23 @@ const Calendar = () => {
                     <Tooltip
                         booking={hoveredBooking}
                         style={{width: tooltipPositioning.width, height: tooltipPositioning.height, top: tooltipPosition.top, left: tooltipPosition.left}}
+                        onClick={() => {
+                            clearTooltipTimer();
+                            setHoveredBooking(null);
+                        }}
                     />
+                </div>
+            )}
+            {hoveredYourBooking && yourBookingHintPosition && (
+                <div
+                    className="your-booking-hint"
+                    style={{
+                        top: yourBookingHintPosition.top,
+                        left: yourBookingHintPosition.left,
+                        '--travel-distance': `${yourBookingHintPosition.travel}px`,
+                    } as React.CSSProperties}
+                >
+                    Det här är din bokning ↓
                 </div>
             )}
             <div className="footer">

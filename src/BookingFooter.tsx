@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './BookingFooter.css';
 import {format} from "date-fns";
 import {sv} from "date-fns/locale";
-import {isFamilyUberhead} from "./authentication/AuthContext";
+import {getFamilyMemberId, isFamilyUberhead} from "./authentication/AuthContext";
 import {getFamilyMembersRequest} from "./rest/booking";
 
 type BookDialogProps = {
@@ -36,9 +36,12 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
             getFamilyMembersRequest()
                 .then(response => {
                     setFamilyMembers(response.data);
-                    // Initialize with the first family member if available
+                    // Default the selector to the logged-in user so an uberhead
+                    // doesn't accidentally book on behalf of someone else.
                     if (response.data && response.data.length > 0) {
-                        setSelectedFamilyMember(response.data[0]);
+                        const currentMemberId = getFamilyMemberId();
+                        const me = response.data.find((m: FamilyMember) => m.id === currentMemberId);
+                        setSelectedFamilyMember(me ?? response.data[0]);
                     }
                     setLoading(false);
                 })

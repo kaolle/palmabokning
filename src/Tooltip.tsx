@@ -6,6 +6,7 @@ import {generateColorFromName} from "./utils/colorUtils";
 type TooltipProps = {
     booking: Booking;
     style?: CSSProperties; // Define the style prop
+    onClick?: () => void;
 };
 
 function getDatePart(dateString: string) {
@@ -19,7 +20,7 @@ function getDatePart(dateString: string) {
     return `${year}-${month}-${day}`;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({booking, style}) => {
+const Tooltip: React.FC<TooltipProps> = ({booking, style, onClick}) => {
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
@@ -30,7 +31,7 @@ const Tooltip: React.FC<TooltipProps> = ({booking, style}) => {
     const memberColor = generateColorFromName(booking.familyMember.name);
 
     return (
-        <div className={`tooltip ${isActive ? 'active' : ''}`} style={style}>
+        <div className={`tooltip ${isActive ? 'active' : ''}`} style={style} onClick={onClick}>
             <p>
                 <span
                     style={{

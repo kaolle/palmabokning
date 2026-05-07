@@ -68,7 +68,7 @@ body, html {
         float: none;
         padding-top: 130px; /* Adjust based on the header height */
         padding-bottom: 65px; /* Adjust based on the footer height */
-        padding-left: 0px;
+        padding-left: 0;
     }
 }
 
@@ -207,4 +207,55 @@ body, html {
 .booking-info {
     font-size: 12px;
     color: #888;
+}
+
+@keyframes your-booking-hint-trail {
+    /* Phase 1 — appear larger right at the cell */
+    0% {
+        opacity: 0;
+        transform: translateY(-8px) scale(1);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(0) scale(1.45);
+    }
+    /* Phase 2 — glide down toward the footer, shrinking */
+    55% {
+        opacity: 0.95;
+        transform: translateY(calc(var(--travel-distance, 40vh) * 0.7)) scale(1);
+    }
+    /* Phase 3 — land at the footer and embrace it: stretch wide + strong glow */
+    70% {
+        opacity: 1;
+        transform: translateY(var(--travel-distance, 40vh)) scale(0.92);
+    }
+    82% {
+        opacity: 0.95;
+        transform: translateY(var(--travel-distance, 40vh)) scaleX(2.6) scaleY(1.2);
+        box-shadow:
+            0 0 28px 10px rgba(255, 140, 0, 0.95),
+            0 0 70px 28px rgba(255, 87, 34, 0.55);
+    }
+    /* Phase 4 — fade out, leaving the footer for the user to act on */
+    100% {
+        opacity: 0;
+        transform: translateY(var(--travel-distance, 40vh)) scaleX(3) scaleY(1.2);
+    }
+}
+
+.your-booking-hint {
+    --travel-distance: 40vh; /* default; overridden inline from JS with the cell→footer distance */
+    position: fixed;
+    background: linear-gradient(to right, #ff9d45, #ff5722);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 0 12px 3px rgba(255, 140, 0, 0.7);
+    pointer-events: none;
+    z-index: 200;
+    white-space: nowrap;
+    transform-origin: center center;
+    animation: your-booking-hint-trail 4s ease-in-out forwards;
 }
