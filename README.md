@@ -1,3 +1,41 @@
+# Palmabokning
+
+A family vacation property booking calendar. Multiple family members coordinate stays at a shared holiday property — each person sees a 12-month scrollable calendar, books date ranges, and sees others' bookings color-coded by name. Your own bookings are highlighted distinctly.
+
+## Tech Stack
+
+- **Frontend:** React 18 + TypeScript (Create React App), date-fns (Swedish locale), axios, react-responsive
+- **Tests:** Jest, @testing-library/react, msw
+- **Static server:** Express on Node 18 (`server.js`, port 4011, HTTPS-enforced)
+- **API backend:** Separate service (dev `localhost:8080`, prod on Heroku) — not in this repo
+- **Auth:** JWT in localStorage, manually decoded for expiry checks
+
+## Architecture
+
+- `App.js` wraps everything in `AuthProvider`, renders `LoginDialog` + `Calendar`
+- `Calendar.tsx` — main UI: week-grid, date selection, scroll persistence
+- `authentication/AuthContext.tsx` — JWT, role and expiry handling
+- `rest/booking.ts`, `rest/authentication.ts` — axios endpoints with token interceptor
+- `FamilyMemberAdmin.tsx` — uberhead-only roster management
+
+## Domain Model
+
+```
+FamilyMember { id, name, phrase }   // phrase = signup invite token
+Booking      { id, from, to, familyMember }
+```
+
+## Features
+
+- Login + signup (signup requires an invite "phrase")
+- 12-month rolling calendar, click-to-select date range, hover tooltips
+- Color-per-family-member rendering, "your booking" highlight
+- Role `ROLE_FAMILY_UBERHEAD` → can book on behalf of others and manage the roster
+- Scroll position restored after a booking is created
+- Swedish locale, mobile-responsive layout
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

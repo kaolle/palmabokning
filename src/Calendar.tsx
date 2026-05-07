@@ -50,6 +50,7 @@ const Calendar = () => {
     const isSmallFlippedMobile = useMediaQuery({ maxWidth: 769 });
     const weekRefs = useRef<{[key: string]: HTMLDivElement | null}>({});
     const calendarRef = useRef<HTMLDivElement>(null);
+    const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const title = "Palma Bokningskalender";
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -99,6 +100,38 @@ const Calendar = () => {
         return pos;
     }
 
+    const clearTooltipTimer = () => {
+        if (tooltipTimeoutRef.current) {
+            clearTimeout(tooltipTimeoutRef.current);
+            tooltipTimeoutRef.current = null;
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current);
+        };
+    }, []);
+
+    function calculatePositioningFromRect(target: HTMLElement, popupPositioning: PopupPositioning): PopupPosition {
+        // Anchor the tooltip to the tapped cell instead of touch coordinates;
+        // this keeps it stable across the synthetic mouse events iOS fires on tap.
+        const rect = target.getBoundingClientRect();
+        const scrollX = window.scrollX || window.pageXOffset;
+        const scrollY = window.scrollY || window.pageYOffset;
+        let pos: PopupPosition = {
+            left: rect.left + scrollX,
+            top: rect.bottom + scrollY,
+        };
+        if (rect.left + popupPositioning.width > window.innerWidth) {
+            pos.left = window.innerWidth + scrollX - popupPositioning.width - popupPositioning.windowPadding;
+        }
+        if (rect.bottom + popupPositioning.height > window.innerHeight) {
+            pos.top = rect.top + scrollY - popupPositioning.height;
+        }
+        return pos;
+    }
+
     const handleDateClick = (date: Date,  event: any) => {
         if (isYourBooking(date)) {
             setHoveredYourBooking(filterFrom(yourBookings, date)[0]);
@@ -109,8 +142,31 @@ const Calendar = () => {
         }
 
         if (isBooked(date)) {
+            if (isMobile) {
+                const tapped = filterFrom(bookings, date)[0];
+                // Toggle off when re-tapping the same booking
+                if (hoveredBooking && hoveredBooking.id === tapped.id) {
+                    clearTooltipTimer();
+                    setHoveredBooking(null);
+                    return;
+                }
+                clearTooltipTimer();
+                setHoveredBooking(tapped);
+                setTooltipPosition(calculatePositioningFromRect(event.currentTarget as HTMLElement, tooltipPositioning));
+                tooltipTimeoutRef.current = setTimeout(() => {
+                    setHoveredBooking(null);
+                    tooltipTimeoutRef.current = null;
+                }, 8000);
+            }
             return;
         }
+
+        // Tapping a free cell on mobile dismisses any open tooltip
+        if (isMobile && hoveredBooking) {
+            clearTooltipTimer();
+            setHoveredBooking(null);
+        }
+
         if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
             setSelectedStartDate(date);
             setSelectedEndDate(null);
@@ -123,20 +179,19 @@ const Calendar = () => {
     }
 
     const handleMouseEnter = (date: Date, event: any) => {
+        // iOS Chrome fires synthetic mouseenter/mouseleave on tap, which caused
+        // the tooltip to flicker and disappear. On mobile, the tooltip is
+        // driven by handleDateClick instead.
+        if (isMobile) return;
         const filterBookings = filterFrom(bookings, date);
         if (filterBookings.length === 1) {
             setHoveredBooking(filterBookings[0]);
             setTooltipPosition(calculatePositioning(event, tooltipPositioning));
-            if (isMobile) {
-                setTimeout(() => {
-                    setHoveredBooking(null);
-                    setTooltipPosition({top: 0, left: 0});
-                }, 4000);
-            }
         }
     }
 
     const handleMouseLeave = () => {
+        if (isMobile) return;
         setHoveredBooking(null);
         setTooltipPosition({top: 0, left: 0});
     }
