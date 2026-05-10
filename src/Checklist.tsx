@@ -8,17 +8,19 @@ interface ChecklistProps {
 
 const ITEMS: { id: string; label: string }[] = [
     { id: 'damsug', label: 'Dammsug alla golv' },
-    { id: 'vattorka', label: 'Våttorka golv och badrumsgolv' },
-    { id: 'toalett', label: 'Skura toaletten och tvättstället' },
+    { id: 'vattorka', label: 'Våttorka alla golv' },
+    { id: 'spis', label: 'Stäng av spisen och rengör spishäll och kolla ugnen om den behöver rengöras' },
     { id: 'kylskap', label: 'Töm kylen på färskvaror — släng eller ät upp eller rent av ta med hem' },
+    { id: 'kylskap2', label: 'Lämna vatten och 6 öl i kylskåpet' },
+    { id: 'toalett', label: 'Skura toaletten och tvättstället' },
     { id: 'diskmaskin', label: 'Kör och töm diskmaskinen' },
     { id: 'soptunnor', label: 'Töm alla soptunnor' },
+    { id: 'forbrukning', label: 'Fyll på saker som tagit slut, ex diskmedel, tvål och toapapper' },
     { id: 'badd', label: 'Tvättan sängkläder, dock inte om du åker hem tidigt på morgonen' },
     { id: 'fonster', label: 'Vädra och sedan stänger ni alla fönster' },
     { id: 'element', label: 'Stäng av ACn och element' },
     { id: 'glomtsaker', label: 'Kolla under sängar och i lådor — inga glömda prylar' },
     { id: 'diskreta', label: 'Inga kondomer eller annat skräp under sängarna 😉' },
-    { id: 'spis', label: 'Stäng av spisen och kolla ugnen om den behöver rengöras' },
     { id: 'las', label: 'Ta in balkong stolar och stäng balkong dörren' },
     { id: 'nyckel', label: 'Ta med nyckeln hem' },
 ];
