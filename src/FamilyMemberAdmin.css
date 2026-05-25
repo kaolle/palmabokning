@@ -254,7 +254,6 @@ body.modal-open .calendar {
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: relative;
-  overflow: hidden;
   transition: transform 150ms ease, box-shadow 150ms ease;
   /* Stagger the entry of each row using the inline --item-index variable */
   animation: fma-item-fade-in 320ms ease-out both;
@@ -271,6 +270,8 @@ body.modal-open .calendar {
   bottom: 0;
   width: 6px;
   background-color: var(--member-color, #cccccc);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .family-member-item:hover {
@@ -399,19 +400,18 @@ body.modal-open .calendar {
   }
 
   .family-member-item {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 14px 14px 14px 20px;
+    flex-wrap: wrap;
+    padding: 12px 14px 12px 18px;
   }
 
   .member-actions {
-    align-self: stretch;
+    align-self: center;
     justify-content: flex-end;
-    margin-top: 8px;
+    margin-top: 0;
   }
 
   .member-actions button {
-    flex: 1;
+    flex: 0 0 auto;
   }
 
   .editing-inputs {
