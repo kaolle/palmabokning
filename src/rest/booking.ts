@@ -96,3 +96,21 @@ export async function deleteFamilyMemberRequest(uuid: string) {
         throw error;
     }
 }
+
+export async function getMyFamilyMemberRequest() {
+    return await axiosInstance.get(`${FAMILY_MEMBER_PATH}/me`);
+}
+
+const GUESTBOOK_PATH = 'guestbook';
+
+export async function getGuestbookEntriesRequest() {
+    return await axiosInstance.get(GUESTBOOK_PATH);
+}
+
+export async function postGuestbookEntryRequest(stayFrom: string, stayTo: string, message: string) {
+    return await axiosInstance.post(GUESTBOOK_PATH, { stayFrom, stayTo, message });
+}
+
+export async function deleteGuestbookEntryRequest(id: string) {
+    return await axiosInstance.delete(`${GUESTBOOK_PATH}/${id}`);
+}

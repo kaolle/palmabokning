@@ -1,0 +1,262 @@
+.guestbook-page {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    background-color: #f7f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #2f4155;
+}
+
+.guestbook-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgb(174, 196, 95) 0%, #659DBD 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.guestbook-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.guestbook-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.2px;
+}
+
+.guestbook-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin: 2px 0 0;
+}
+
+.guestbook-back-btn {
+    background: rgba(255, 255, 255, 0.18);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 150ms ease, transform 150ms ease;
+    flex-shrink: 0;
+}
+
+.guestbook-back-btn:hover {
+    background: rgba(255, 255, 255, 0.32);
+    transform: scale(1.08);
+}
+
+.guestbook-content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.guestbook-form-section h2,
+.guestbook-entries-section h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2f4155;
+    margin: 0 0 14px;
+    letter-spacing: 0.2px;
+}
+
+.guestbook-form {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2f4155;
+}
+
+.form-row {
+    flex-direction: row;
+    gap: 16px;
+}
+
+.form-row > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-row label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2f4155;
+}
+
+.guestbook-form input[type="text"],
+.guestbook-form input[type="date"],
+.guestbook-form textarea {
+    border: 2px solid #e3e8ec;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #2f4155;
+    background-color: #f7f9fa;
+    transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+    outline: none;
+}
+
+.guestbook-form input[type="text"]:focus,
+.guestbook-form input[type="date"]:focus,
+.guestbook-form textarea:focus {
+    border-color: rgb(174, 196, 95);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(174, 196, 95, 0.18);
+}
+
+.guestbook-form textarea {
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.guestbook-submit-btn {
+    align-self: flex-start;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, rgb(174, 196, 95) 0%, #659DBD 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(101, 157, 189, 0.35);
+    transition: transform 120ms ease, box-shadow 150ms ease, filter 150ms ease;
+}
+
+.guestbook-submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(101, 157, 189, 0.45);
+    filter: brightness(1.06);
+}
+
+.guestbook-saved-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid rgb(174, 196, 95);
+}
+
+.guestbook-saved-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3a7a4f;
+    flex: 1;
+}
+
+.guestbook-empty {
+    color: #7a8896;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.guestbook-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.guestbook-entry {
+    background: white;
+    border-radius: 10px;
+    padding: 14px 18px 14px 22px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid rgb(174, 196, 95);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.guestbook-entry:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.entry-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2f4155;
+}
+
+.entry-dates {
+    font-size: 0.8rem;
+    color: #7a8896;
+}
+
+.entry-message {
+    color: #2f4155;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 600px) {
+    .guestbook-content {
+        padding: 20px 14px 40px;
+    }
+
+    .guestbook-form {
+        padding: 16px 14px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .guestbook-entry {
+        padding: 12px 14px 12px 18px;
+    }
+
+    .entry-header {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .guestbook-submit-btn {
+        min-height: 44px;
+    }
+}

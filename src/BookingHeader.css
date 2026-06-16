@@ -1,27 +1,32 @@
 .header-panel {
     display: flex;
-    justify-content: space-between;
-    align-items: center; /* Aligns items vertically in the center */
-    padding: 0 20px; /* Adds padding to the header, you can adjust this value */
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0 20px;
 }
 
 .title {
-    margin-right: auto; /* Pushes everything else to the right */
+    margin: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .header-buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
-    align-items: flex-end;
+    align-items: center;
+    padding-bottom: 8px;
+    margin-top: 10px;
 }
 
-.logoutButton, .adminButton, .checklistButton {
+.logoutButton, .adminButton, .checklistButton, .guestBookButton {
     display: inline-block;
-    padding: 10px 20px;
-    font-size: 1.9vw;
-    background-color: #007bff; /* Primary button color, change as needed */
-    color: #fff; /* Text color */
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -30,7 +35,7 @@
 }
 
 .adminButton {
-    background-color: #28a745; /* Green color for admin button */
+    background-color: #28a745;
 }
 
 .adminButton:hover {
@@ -38,23 +43,22 @@
 }
 
 .checklistButton {
-    background-color: #e67e22; /* Warm orange so it stands out from admin/logout */
+    background-color: #e67e22;
 }
 
 .checklistButton:hover {
     background-color: #d35400;
 }
 
-.logoutButton {
-    /* No margin needed in column layout */
+.guestBookButton {
+    background-color: #c0855a;
+}
+
+.guestBookButton:hover {
+    background-color: #a0633a;
 }
 
 @media (max-width: 815px) {
-    .logoutButton, .adminButton, .checklistButton {
-        font-size: 2.5vw;
-        padding: 8px 15px;
-    }
-
     .header-buttons {
         gap: 5px;
     }

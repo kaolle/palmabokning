@@ -80,8 +80,7 @@ const Calendar = () => {
     useEffect(() => {
         document.title = title;
         setSignedIn(isTokenStillValid());
-        // Adjust this as needed
-    } );
+    }, []);
 
     function calculatePositioning(event: any, popupPositioning: PopupPositioning) {
         // Calculate the initial position
