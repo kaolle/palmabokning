@@ -76,31 +76,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     useJwtTokenData();
 
 
-    const login = async (credentials: Credentials) => {
-        const response = await loginRequest(credentials);
+    const handleAuthResponse = (data: any) => {
+        const accessToken = data.accessToken ?? data.token;
+        const tokenType = data.tokenType ?? data.type ?? 'Bearer';
+        const { id, roles } = data;
 
-        // API response includes a JWT token, user info, and roles array
-        const {accessToken, tokenType, id, roles} = response.data;
+        if (!accessToken) {
+            throw new Error('No access token in auth response');
+        }
 
         storeAuthData(accessToken, tokenType, id, roles);
-
         decodeAndSaveExpirationTime(accessToken);
-
         setSignedIn(true);
+    };
 
+    const login = async (credentials: Credentials) => {
+        const response = await loginRequest(credentials);
+        handleAuthResponse(response.data);
     };
 
     const signup = async (credentials: Credentials) => {
         const response = await signupRequest(credentials);
-
-        // API response includes a JWT token, user info, and roles array
-        const {accessToken, tokenType, id, roles} = response.data;
-
-        storeAuthData(accessToken, tokenType, id, roles);
-
-        decodeAndSaveExpirationTime(accessToken);
-
-        setSignedIn(true);
+        handleAuthResponse(response.data);
     };
 
     const storeAuthData = (accessToken:string, tokenType: string, id: string, roles: string[]) => {

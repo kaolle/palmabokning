@@ -1,8 +1,10 @@
-.bookDialog {
-    visibility: hidden;
-    position: absolute;
-
-    /* Add styling here */
+@keyframes fire-edge-flicker {
+    0%   { opacity: 0.45; }
+    18%  { opacity: 0.92; }
+    37%  { opacity: 0.62; }
+    55%  { opacity: 1.00; }
+    73%  { opacity: 0.70; }
+    100% { opacity: 0.50; }
 }
 
 .modal-overlay {
@@ -12,7 +14,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
 }
@@ -20,43 +22,58 @@
 .modal-content {
     display: flex;
     padding: 20px;
-    box-shadow: 0px 0px 10px 0px #000; /* Box shadow for depth effect */
+    box-shadow: 0px 0px 10px 0px #000;
     width: 50%;
     height: 50%;
-    margin: auto; /* Center the modal content horizontally */
-    text-align: left; /* Left-align the content within the modal */
-    display: flex;
+    margin: auto;
+    text-align: left;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevent horizontal scroll */
+    overflow: hidden;
+    position: relative;
 }
 
-
 .login-modal {
-    background: linear-gradient(to right, #659DBD, #a8e063, #56ab2f); /* Blue to lighter green to green */
+    background: linear-gradient(to right, rgb(var(--brand-start-rgb)), rgb(var(--brand-end-rgb)));
 }
 
 .create-account-modal {
-    background: linear-gradient(to right, #56ab2f, #a8e063, #659DBD); /* Green to lighter green to blue */
+    background: linear-gradient(to right, rgb(var(--brand-end-rgb)), rgb(var(--brand-start-rgb)));
+}
+
+.fire-season .modal-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    background: linear-gradient(to right,
+        transparent 0%,
+        rgba(255, 80, 0, 0.35) 40%,
+        rgba(255, 205, 20, 0.80) 100%
+    );
+    filter: blur(6px);
+    pointer-events: none;
+    animation: fire-edge-flicker 1.1s ease-in-out infinite alternate;
+    z-index: 2;
 }
 
 .account-question-container {
     display: flex;
     align-items: center;
     justify-content: left;
-    gap: 10px; /* Adjust the space between the items */
+    gap: 10px;
     margin-bottom: 5vw;
-    width: 70%; /* Ensure the container takes full width */
+    width: 70%;
 }
 
-
-/* Media query for responsiveness */
 @media screen and (max-width: 600px) {
     .modal-content {
         width: 90%;
         height: 90%;
-        max-width: 100%; /* Increase width for smaller screens */
+        max-width: 100%;
     }
 }
 
@@ -67,7 +84,7 @@
     width: 70%;
 }
 
-.info-text-panel{
+.info-text-panel {
     max-width: 80%;
 }
 
@@ -75,11 +92,11 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
-    text-align: left; /* Left-align the content within the modal */
+    text-align: left;
 }
 
 .header-container h2 {
-    margin: 0; /* Reset the default margin of the h2 element */
+    margin: 0;
     text-wrap: avoid;
 }
 
@@ -89,19 +106,18 @@
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 15px;
-    transition: opacity 0.6s ease; /* Add transition property for smooth fade-out */
+    transition: opacity 0.6s ease;
 }
 
 .error-panel.hidden {
     opacity: 0;
-    pointer-events: none; /* Disable pointer events when hidden to prevent interaction */
+    pointer-events: none;
 }
 
 .error-text {
 }
 
 label {
-    /*display: block;*/
     margin-bottom: 5px;
 }
 
@@ -123,7 +139,7 @@ input {
 }
 
 .modal-button {
-    background-color: #4caf50; /* Primary button color, change as needed */
+    background-color: #4caf50;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -131,14 +147,32 @@ input {
     cursor: pointer;
     white-space: nowrap;
 
-    /* Style for the default button */
     &.__default {
-        background-color: #007bff;
+        background: linear-gradient(135deg, rgb(var(--brand-start-rgb)) 0%, rgb(var(--brand-end-rgb)) 100%);
         color: white;
         margin-right: 5%;
+        padding: 12px 28px;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        border: 2px solid rgba(80, 0, 0, 0.55);
+        border-radius: 6px;
+        box-shadow:
+            0 2px 8px rgba(var(--brand-end-rgb), 0.5),
+            0 0 0 3px rgba(80, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transition: transform 120ms ease, filter 150ms ease, box-shadow 150ms ease;
     }
 
-    /* Style for the secondary button */
+    &.__default:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+        box-shadow:
+            0 5px 16px rgba(var(--brand-end-rgb), 0.6),
+            0 0 0 3px rgba(80, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
     &.__secondary {
         background-color: #4caf50;
         color: white;
@@ -148,15 +182,15 @@ input {
 .high-lighted-panel {
     font-weight: bold;
     padding: 20px;
-    border: 1px solid #ddd; /* Border color */
-    border-radius: 8px; /* Border radius for rounded corners */
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle depth effect */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
     background-color: #92eba1;
-    margin: 20px; /* Adjust margin as needed */
+    margin: 20px;
 }
 
 .high-lighted-panel p {
-    color: #666; /* Content color */
+    color: #666;
 }
 
 .radio-button-group {
@@ -171,11 +205,11 @@ input {
 
 .radio-container input[type="radio"] {
     display: block;
-    margin-bottom: 5px; /* Adjust as needed */
+    margin-bottom: 5px;
 }
 
 .radio-container span {
-    vertical-align: middle; /* Align the text vertically with the radio button */
+    vertical-align: middle;
 }
 
 .vertical-radio-container {
@@ -184,5 +218,5 @@ input {
 
 .vertical-radio-container input[type="radio"] {
     display: block;
-    margin-bottom: 5px; /* Adjust as needed */
+    margin-bottom: 5px;
 }

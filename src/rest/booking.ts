@@ -18,6 +18,19 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            [JWT_TOKEN, TOKEN_TYPE, 'familyMemberId', 'jwtExpirationTimestamp', 'userRole'].forEach(
+                key => localStorage.removeItem(key)
+            );
+            window.location.reload();
+        }
+        return Promise.reject(error);
+    }
+);
+
 const BOOKING_PATH = 'booking';
 const FAMILY_MEMBER_PATH = 'family-member';
 
