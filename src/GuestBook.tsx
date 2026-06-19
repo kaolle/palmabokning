@@ -33,6 +33,8 @@ const GuestBook: React.FC<GuestBookProps> = ({ onClose }) => {
         ]).then(([entriesRes, meRes]) => {
             setEntries(entriesRes.data);
             setMemberName(meRes.data.name);
+            if (meRes.data.stayFrom) setStayFrom(meRes.data.stayFrom.split('T')[0]);
+            if (meRes.data.stayTo) setStayTo(meRes.data.stayTo.split('T')[0]);
         }).catch(console.error).finally(() => setLoading(false));
     }, []);
 
