@@ -118,6 +118,8 @@
 .guestbook-form input[type="text"],
 .guestbook-form input[type="date"],
 .guestbook-form textarea {
+    width: 100%;
+    box-sizing: border-box;
     border: 2px solid #e3e8ec;
     border-radius: 8px;
     padding: 10px 14px;
