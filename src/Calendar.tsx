@@ -19,12 +19,13 @@ import Tooltip from "./Tooltip";
 import {compareDateParts} from "./dateUtils";
 import {useMediaQuery} from 'react-responsive';
 import {
+    deleteBookingForMemberRequest,
     deleteBookingRequest,
     getBookingsRequest,
     postBookingForMemberRequest,
     postBookingRequest
 } from "./rest/booking";
-import {getFamilyMemberId, isTokenStillValid, useAuth} from "./authentication/AuthContext";
+import {getFamilyMemberId, isFamilyUberhead, isTokenStillValid, useAuth} from "./authentication/AuthContext";
 import BookingFooter from "./BookingFooter";
 import BookingHeader from "./BookingHeader";
 import {generateColorFromName} from "./utils/colorUtils";
@@ -193,6 +194,15 @@ const Calendar = () => {
         }
 
         if (isBooked(date)) {
+            if (isFamilyUberhead()) {
+                clearYourBookingTimer();
+                setHoveredYourBooking(filterFrom(bookings, date)[0]);
+                yourBookingTimerRef.current = setTimeout(() => {
+                    setHoveredYourBooking(null);
+                    yourBookingTimerRef.current = null;
+                }, 7000);
+                return;
+            }
             if (isMobile) {
                 const tapped = filterFrom(bookings, date)[0];
                 // Toggle off when re-tapping the same booking
@@ -479,7 +489,12 @@ const Calendar = () => {
             console.log('Saved visible week before deletion:', format(currentVisibleWeek, 'yyyy-MM-dd'));
         }
 
-        deleteBookingRequest(hoveredYourBooking)
+        const isOwnBooking = hoveredYourBooking?.familyMember.id === familyMemberId;
+        const deletePromise = isOwnBooking
+            ? deleteBookingRequest(hoveredYourBooking)
+            : deleteBookingForMemberRequest(hoveredYourBooking!.id);
+
+        deletePromise
             .then(() => {
                 // Fetch bookings from server again to get the updated list
                 setLoading(true);

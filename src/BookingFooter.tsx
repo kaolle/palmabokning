@@ -29,8 +29,6 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
     const isUberhead = isFamilyUberhead();
 
     useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
-
         if (isUberhead) {
             setLoading(true);
             getFamilyMembersRequest()
@@ -50,11 +48,6 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
                     setLoading(false);
                 });
         }
-
-        return () => {
-            // Clear the timeout when the component unmounts
-            clearTimeout(timeoutId);
-        };
     }, [isUberhead]);
 
     const handlePrevMember = () => {
@@ -117,7 +110,11 @@ const BookingFooter: React.FC<BookDialogProps> = ({onBookClick, onBookAbort, onB
             )}
             {yourBooking && (
                 <div className="buttonRow">
-                    <button data-role="cancel-booking" className="button" onClick={onBookDeleteClick}>Tabort din bokning</button>
+                    <button data-role="cancel-booking" className="button" onClick={onBookDeleteClick}>
+                        {yourBooking.familyMember.id === getFamilyMemberId()
+                            ? 'Tabort din bokning'
+                            : `Tabort bokning för ${yourBooking.familyMember.name}`}
+                    </button>
                     <div
                         className="footer-date-panel">{formatBookedDate(yourBooking.from)} - {formatBookedDate(yourBooking.to)}
                     </div>

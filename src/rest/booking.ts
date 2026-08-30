@@ -78,6 +78,14 @@ export async function deleteBookingRequest(booking: Booking|null) {
     }
 }
 
+export async function deleteBookingForMemberRequest(bookingId: string) {
+    try {
+        await axiosInstance.delete(`${BOOKING_PATH}/family-member/${bookingId}`);
+    } catch (error) {
+        throw error;
+    }
+}
+
 export async function getBookingsRequest() {
     return await axiosInstance.get(BOOKING_PATH);
 }
