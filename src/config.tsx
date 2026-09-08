@@ -3,7 +3,7 @@ const config = {
         apiUrl: 'http://localhost:8080/',
     },
     production: {
-        apiUrl: 'https://palma-booking-service-76e9d3b1d91b.herokuapp.com/',
+        apiUrl: 'https://booking-service-git-343434101934.europe-west1.run.app/',
     },
 };
 
