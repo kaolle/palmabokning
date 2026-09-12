@@ -135,3 +135,7 @@ export async function postGuestbookEntryRequest(stayFrom: string, stayTo: string
 export async function deleteGuestbookEntryRequest(id: string) {
     return await axiosInstance.delete(`${GUESTBOOK_PATH}/${id}`);
 }
+
+export async function resetFamilyMemberLoginRequest(id: string) {
+    return await axiosInstance.delete(`${FAMILY_MEMBER_PATH}/${id}/user`);
+}

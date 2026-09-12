@@ -4,6 +4,7 @@ import './FamilyMemberAdmin.css';
 import {
   createFamilyMemberRequest,
   deleteFamilyMemberRequest,
+  resetFamilyMemberLoginRequest,
   getFamilyMembersRequest,
   updateFamilyMemberRequest
 } from './rest/booking';
@@ -21,6 +22,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
   const [error, setError] = useState<string | null>(null);
   const [newMemberName, setNewMemberName] = useState<string>('');
   const [newMemberPhrase, setNewMemberPhrase] = useState<string>('');
+  const [success, setSuccess] = useState<string | null>(null);
   const [editingMember, setEditingMember] = useState<FamilyMember | null>(null);
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
 
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await getFamilyMembersRequest();
@@ -73,6 +76,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
 
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       await createFamilyMemberRequest(newMemberName, newMemberPhrase);
@@ -100,6 +104,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
 
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       await updateFamilyMemberRequest(editingMember.id, editingMember.name, editingMember.phrase);
@@ -120,6 +125,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
 
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       await deleteFamilyMemberRequest(id);
@@ -127,6 +133,23 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
     } catch (err) {
       console.error('Error deleting family member:', err);
       setError('Kunde inte ta bort familjemedlem');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetLogin = async (member: FamilyMember) => {
+    if (!window.confirm(`Återställ inloggningen för ${member.name}? Användarkontot tas bort. Familjemedlemmen, frasen och bokningarna behålls. Personen kan sedan registrera en ny inloggning med samma fras.`)) {
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      await resetFamilyMemberLoginRequest(member.id);
+      setSuccess(`Inloggningen för ${member.name} är återställd. En ny inloggning kan registreras med samma fras.`);
+    } catch (err) {
+      setError('Kunde inte återställa inloggningen. Försök igen.');
     } finally {
       setLoading(false);
     }
@@ -142,6 +165,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
           <button className="close-button" onClick={onClose}>×</button>
         </div>
 
+        {success && <div className="reset-success-message" role="status">{success}</div>}
         {error && <div className="error-message">{error}</div>}
 
         <div className="new-member-form">
@@ -218,6 +242,7 @@ const FamilyMemberAdmin: React.FC<FamilyMemberAdminProps> = ({ isOpen, onClose }
                       </div>
                       <div className="member-actions">
                         <button className="btn-secondary" onClick={() => setEditingMember(member)}>Redigera</button>
+                        <button className="btn-secondary" title="Återställ inloggning" aria-label={`Återställ inloggning för ${member.name}`} onClick={() => handleResetLogin(member)}>Återställ</button>
                         <button className="btn-danger" onClick={() => handleDeleteMember(member.id)}>Ta bort</button>
                       </div>
                     </>

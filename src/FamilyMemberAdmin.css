@@ -423,3 +423,26 @@ body.modal-open .calendar {
     min-height: 44px;
   }
 }
+
+.family-member-item {
+  flex-wrap: wrap;
+}
+
+.member-actions {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.reset-success-message {
+  margin: 16px 20px 0;
+  padding: 10px 14px;
+  background: #e8f5e9;
+  color: #245c30;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .member-actions {
+    width: 100%;
+  }
+}
