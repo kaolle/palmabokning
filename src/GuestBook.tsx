@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './GuestBook.css';
 import { getGuestbookEntriesRequest, getMyFamilyMemberRequest, postGuestbookEntryRequest } from './rest/booking';
-import { isFamilyUberhead } from './authentication/AuthContext';
 
 type GuestEntry = {
     id: string;
@@ -24,7 +23,6 @@ const GuestBook: React.FC<GuestBookProps> = ({ onClose }) => {
     const [message, setMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(true);
-    const isUberhead = isFamilyUberhead();
 
     useEffect(() => {
         Promise.all([

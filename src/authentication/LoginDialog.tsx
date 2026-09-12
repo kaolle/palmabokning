@@ -52,7 +52,7 @@ const LoginDialog = () => {
 
     function validPassword(password: string) {
         const digitRegex = /\d/;
-        const specialCharRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+        const specialCharRegex = /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/;
         return password.length >= 8 && digitRegex.test(password) && specialCharRegex.test(password);
     }
 
